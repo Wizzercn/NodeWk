@@ -1,0 +1,63 @@
+<div id="typeDialog" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">配置商品类型</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row mb10">
+          <div class="form-group">
+            <label for="is_physical" class="col-sm-4 control-label">是否为实体商品</label>
+            <div class="col-sm-6">
+              <input type="radio" <%=obj.is_physical==true||obj.is_physical==undefined?'checked':''%> value="1" name="is_physical">是
+              <input type="radio" <%=obj.is_physical==false?'checked':''%> value="0" name="is_physical">否
+            </div>
+          </div>
+        </div>
+        <div class="row mb10">
+          <div class="form-group">
+            <label for="use_props" class="col-sm-4 control-label">是否启用商品扩展属性</label>
+
+            <div class="col-sm-6">
+              <input type="radio" <%=obj.use_props==true?'checked':''%> value="1" name="use_props">是
+              <input type="radio" <%=obj.use_props==false||obj.use_props==undefined?'checked':''%> value="0" name="use_props">否
+            </div>
+          </div>
+        </div>
+        <!--<div class="row mb10">-->
+          <!--<div class="form-group">-->
+            <!--<label for="use_params" class="col-sm-4 control-label">是否启用商品参数表 </label>-->
+
+            <!--<div class="col-sm-6">-->
+              <!--<input type="radio" <%=obj.use_params==true?'checked':''%>  value="1" name="use_params">是-->
+              <!--<input type="radio" <%=obj.use_params==false||obj.use_params==undefined?'checked':''%>  value="0" name="use_params">否-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
+        <div class="row mb10">
+          <div class="form-group">
+            <label for="use_spec" class="col-sm-4 control-label">是否启用商品规格 </label>
+
+            <div class="col-sm-6">
+              <input type="radio" <%=obj.use_spec==true?'checked':''%> value="1" name="use_spec">是
+              <input type="radio" <%=obj.use_spec==false||obj.use_spec==undefined?'checked':''%> value="0" name="use_spec">否
+            </div>
+          </div>
+        </div>
+        <!--<div class="row mb10">-->
+          <!--<div class="form-group">-->
+            <!--<label for="use_tabs" class="col-sm-4 control-label">是否启用自定义tab </label>-->
+
+            <!--<div class="col-sm-6">-->
+              <!--<input type="radio" <%=obj.use_tabs==true?'checked':''%> value="1" name="use_tabs">是-->
+              <!--<input type="radio" <%=obj.use_tabs==false||obj.use_tabs==undefined?'checked':''%>  value="0" name="use_tabs">否-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</div>-->
+      </div>
+      <div class="modal-footer">
+        <button id="nextOK" type="button" class="btn btn-primary" data-loading-text="下一步...">下一步</button>
+      </div>
+    </div>
+  </div>
+</div>

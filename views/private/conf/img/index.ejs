@@ -1,0 +1,142 @@
+<form id="addForm" role="form" class="form-horizontal"
+      action="/private/conf/img/editDo" method="post">
+  <input name="id" id="id" value="1" type="hidden">
+  <header class="header navbar bg-white shadow">
+    <div class="pull-right">
+      <div class="btn-group tool-button">
+        <button class="btn btn-primary navbar-btn" type="button" id="save"> 保存</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="content-wrap">
+    <div class="wrapper" style="min-height:500px;">
+
+      <section class="panel panel-form">
+        <div class="row mb10">
+          <div class="col-lg-12">
+            <div class="form-group">
+              <label for="s_width" class="col-sm-2 control-label">列表页缩略图设定</label>
+
+              <div class="col-sm-8" style="text-align: left;float: left">
+                宽:<input type="text" id="s_width" style="width: 100px;" name="s_width"
+                       value="<%= obj.s_width||120%>">  x
+                高:<input type="text" id="s_height" style="width: 100px;"  name="s_height"
+                       value="<%= obj.s_height||140%>">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="m_width" class="col-sm-2 control-label">商品页详细图设定</label>
+
+              <div class="col-sm-8" style="text-align: left;float: left">
+                宽:<input type="text" id="m_width" style="width: 100px;" name="m_width"
+                         value="<%= obj.m_width||300%>">  x
+                高:<input type="text" id="m_height" style="width: 100px;"  name="m_height"
+                         value="<%= obj.m_height||300%>">
+              </div>
+            </div>
+            <div class="form-group" style="display: none">
+              <label for="picurl" class="col-sm-2 control-label">水印图片</label>
+
+              <div class="col-sm-8">
+                <div id="queue"></div>
+                <div class="input-group">
+                  <input id="file_upload" name="file_upload" type="file" multiple="false">
+                  <span class="input-group-btn">
+                  <button class="btn btn-color current-time" type="button"
+                          onclick="$('#file_upload').uploadifive('upload')">上传<i class="ti-upload ml5"></i></button>
+                  </span>
+                </div>
+                <div id="img" style="padding: 5px;">
+                  <%if(obj.wk_url){%>
+                  <img src='<%=obj.wk_url||''%>' style='width:150px;'>
+                  <i class="fa fa-close" onclick="$('#wk_url').val('');$('#img').html('');"></i>
+                  <%}%>
+                </div>
+                <input type="hidden" id="wk_url" name="wk_url" value="<%=obj.wk_url||''%>" >
+              </div>
+            </div>
+            <div class="form-group" style="display: none">
+              <label for="wk_txt" class="col-sm-2 control-label">水印文字</label>
+
+              <div class="col-sm-8" style="text-align: left;float: left">
+                <input type="text" id="wk_txt" name="wk_txt"
+                         value="<%= obj.wk_txt||''%>" class="form-control">
+              </div>
+            </div>
+            <div class="form-group" style="display: none">
+              <label for="wk_type" class="col-sm-2 control-label">水印类型</label>
+
+              <div class="col-sm-8" style="text-align: left;float: left">
+                <select name="wk_type" class="form-control">
+                  <option value="0" <%=obj.wk_type==0?'selected':''%>>不启用水印</option>
+                  <option value="1" <%=obj.wk_type==1?'selected':''%>>文字</option>
+                  <option value="2" <%=obj.wk_type==2?'selected':''%>>图片</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+  </div>
+  </div>
+</form>
+<script language="JavaScript">
+  function clearFile() {
+    $("#img").html("");
+    $("#wk_url").val("");
+  }
+  $(document).ready(function () {
+    myForm.init();
+    $('#file_upload').uploadifive({
+      'auto': false,
+      'multi': false,
+      'width': '100%',
+      'height': '35',
+      'buttonText': '请选择图片',
+      'fileType': 'image/*',
+      'fileSizeLimit': 1024,
+      'queueSizeLimit': 1,
+      'formData': {},
+      'queueID': 'queue',
+      'uploadScript': '/open/fileupload/image',
+      'onUploadComplete': function (file, data) {
+        data = JSON.parse(data);
+        if (data.code == 0) {
+          Toast.success(data.msg);
+          $("#img").html('<img src="' + data.path + '" style="width:150px;"><i class="fa fa-close" onclick="$(\'#wk_url\').val(\'\');$(\'#img\').html(\'\');"></i>');
+          $("#wk_url").val(data.path);
+        } else {
+          clearFile();
+          Toast.error(data.msg);
+        }
+      },
+      'onDrop': function (file, fileDropCount) {
+        clearFile();
+      },
+      'onClearQueue': function (queue) {
+        clearFile();
+      },
+      'onCancel': function () {
+        clearFile();
+      }
+    });
+    $("#save").on("click", function () {
+      $('#addForm').submit();
+    });
+    $('#addForm').ajaxForm({
+      dataType: 'json',
+      beforeSubmit: function (arr, form, options) {
+        sublime.showLoadingbar($(".main-content"));
+      },
+      success: function (data, statusText, xhr, form) {
+        if (data.code == 0) {
+          Toast.success(data.msg);
+        } else {
+          Toast.error(data.msg);
+        }
+        sublime.closeLoadingbar($(".main-content"));
+      }
+    });
+  });
+</script>

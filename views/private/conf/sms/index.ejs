@@ -1,0 +1,110 @@
+<form id="addForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+      action="/private/conf/sms/editDo" method="post">
+  <input name="id" id="id" value="1" type="hidden">
+  <header class="header navbar bg-white shadow">
+  <div class="pull-right">
+    <div class="btn-group tool-button">
+      <button class="btn btn-primary navbar-btn" type="button" id="save"> 保存</button>
+    </div>
+  </div>
+</header>
+
+<div class="content-wrap">
+  <div class="wrapper" style="min-height:500px;height: 100%;">
+
+
+      <div class="box-tab">
+        <ul class="nav nav-tabs">
+          <li class="active"><a href="#shop_base" data-toggle="tab">短信平台配置</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane fade active in" id="shop_base">
+            <div class="col-lg-12">
+              <div class="form-group">
+                <label class="col-sm-2 control-label">接入平台</label>
+
+                <div class="col-sm-8">
+                  <select class="form-control" name="app_type">
+                    <option value="top" <%=obj.app_type=='top'?'selected':''%>>阿里大鱼</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">短信签名</label>
+                <div class="col-sm-8">
+                  <input class="form-control" name="sms_sign_name" value="<%=obj.sms_sign_name||''%>">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">App key</label>
+
+                <div class="col-sm-8">
+                  <input class="form-control" name="app_key" value="<%=obj.app_key||''%>">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">App secret</label>
+
+                <div class="col-sm-8">
+                  <input class="form-control" name="app_secret" value="<%=obj.app_secret||''%>">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">用户注册验证码模板</label>
+
+                <div class="col-sm-8">
+                  <input class="form-control" name="sms_reg_template" value="<%=obj.sms_reg_template||''%>">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">身份验证验证码模板</label>
+
+                <div class="col-sm-8">
+                  <input class="form-control" name="sms_check_template" value="<%=obj.sms_check_template||''%>">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">登陆确认验证码模板</label>
+
+                <div class="col-sm-8">
+                  <input class="form-control" name="sms_login_template" value="<%=obj.sms_login_template||''%>">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">修改密码验证码模板</label>
+
+                <div class="col-sm-8">
+                  <input class="form-control" name="sms_password_template" value="<%=obj.sms_password_template||''%>">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+  </div>
+</div>
+</form>
+<script language="JavaScript">
+  $(document).ready(function () {
+    $("#save").on("click",function(){
+      $('#addForm').submit();
+    });
+      $('#addForm').ajaxForm({
+        dataType: 'json',
+        beforeSubmit: function (arr, form, options) {
+          sublime.showLoadingbar($(".main-content"));
+        },
+        success: function (data, statusText, xhr, form) {
+          if (data.code == 0) {
+            Toast.success(data.msg);
+          } else {
+            Toast.error(data.msg);
+          }
+          sublime.closeLoadingbar($(".main-content"));
+        }
+      });
+  });
+</script>

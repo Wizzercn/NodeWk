@@ -1,0 +1,31 @@
+<% unit.forEach(function(obj){
+%>
+<tr data-tt-id="<%=obj.id%>" data-tt-parent-id="<%=obj.parentId==0?'':obj.parentId%>" data-tt-branch="<%=obj.hasChildren==1?'true':'false'%>">
+  <td>
+    <span class="pd-l-sm"></span><i class="<%=obj.icon||''%>"></i> <%-obj.name%>
+  </td>
+  <td><%-obj.url||''%></td>
+  <td><%if(obj.homepage){%>是<%}else{%>否<%}%></td>
+  <td><%if(!obj.disabled){%><i id="disable_<%=obj.id%>" class="fa fa-circle text-success ml5"></i><%}else{%><i id="disable_<%=obj.id%>" class="fa fa-circle text-danger ml5"></i><%}%></td>
+  <td>
+    <div class="btn-group">
+      <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+        <i class="ti-settings"></i>
+        <span class="ti-angle-down"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        <li><a href="/private/cms/channel/detail/<%=obj.id%>" data-toggle="modal"
+               data-target="#dialogDetail">查看</a></li>
+        <li><a href="/private/cms/channel/edit/<%=obj.id%>" data-pjax>修改</a></li>
+        <li><a href="javascript:;" onclick="del(<%=obj.id%>)">删除</a></li>
+        <li class="divider"></li>
+        <li><a href="/private/cms/channel/add?pid=<%=obj.id%>" data-pjax>添加子栏目</a></li>
+        <li class="divider"></li>
+        <li><a href="javascript:;" onclick="enableRole(<%=obj.id%>)">启用</a></li>
+        <li><a href="javascript:;" onclick="disableRole(<%=obj.id%>)">禁用</a></li>
+      </ul>
+    </div>
+  </td>
+</tr>
+<%
+}); %>

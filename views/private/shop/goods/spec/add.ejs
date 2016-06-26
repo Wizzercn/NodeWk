@@ -1,0 +1,178 @@
+<header class="header navbar bg-white shadow">
+  <div class="btn-group tool-button">
+    <a class="btn btn-primary navbar-btn" href="/private/shop/goods/spec" data-pjax><i class="ti-angle-left"></i> 返回</a>
+  </div>
+</header>
+
+<div class="content-wrap">
+  <div class="wrapper" style="min-height:500px;">
+    <section class="panel panel-form">
+      <form id="addForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+            action="/private/shop/goods/spec/addDo" method="post">
+        <div class="row mb10">
+          <div class="col-lg-12">
+            <div class="form-group">
+              <label for="name" class="col-sm-2 control-label">规格名称</label>
+
+              <div class="col-sm-8">
+                <input type="text" id="name" class="form-control" name="name" data-parsley-required="true"
+                       placeholder="规格名称">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="memo" class="col-sm-2 control-label">规格备注</label>
+
+              <div class="col-sm-8">
+                <input type="text" id="memo" class="form-control" name="memo"
+                       placeholder="规格备注">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="alias" class="col-sm-2 control-label">规格别名</label>
+
+              <div class="col-sm-8">
+                <input type="text" id="alias" class="form-control" name="alias"
+                       placeholder="规格别名">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="type" class="col-sm-2 control-label">显示类型</label>
+
+              <div class="col-sm-8">
+                <input type="radio" checked value="0" name="type">文字
+                <input type="radio" value="1" name="type">图片
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="type" class="col-sm-2 control-label"></label>
+
+              <div class="col-sm-8">
+                <button id="btnAdd" type="button" class="btn btn-default"><i class="fa fa-plus mr5"></i>添加规格值</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="type" class="col-sm-2 control-label"></label>
+              <div class="col-sm-8">
+                <table id="tab" width="600" border="0" cellspacing="0" cellpadding="0" >
+                  <thead>
+                  <tr align="center">
+                    <td>规格值名称</td>
+                    <td width="2"></td>
+                    <td>规格值别名</td>
+                    <td width="2"></td>
+                    <td style="display: none">规格图片</td>
+                    <td>操作</td>
+                  </tr>
+                  </thead>
+                  <TBODY>                  　
+                                 　
+                  </TBODY>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3"></div>
+        <div class="col-lg-6">
+          <div class="form-group text-center">
+            <label></label>
+
+            <div>
+              <button class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="正在提交...">提 交</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </section>
+
+  </div>
+</div>
+<div id="buttom"></div>
+<script language="JavaScript">
+  function binEvent(){
+    $("#tab .up").unbind("click").on("click",function(){
+      var p=$(this).parent().parent();
+      var nextTR = p.prev();
+      if (nextTR.length > 0) {
+        nextTR.insertAfter(p);
+      }
+    });
+    $("#tab .down").unbind("click").on("click",function(){
+      var p=$(this).parent().parent();
+      var nextTR = p.next();
+      if (nextTR.length > 0) {
+        nextTR.insertBefore(p);
+      }
+    });
+    $("#tab .del").unbind("click").on("click",function(){
+      var tr=$("#tab tbody").find("tr");
+      if (tr.length > 0) {
+        $(this).parent().parent().remove();
+      }
+    });
+    $("#tab .btn").unbind("click").on("click",function(){
+      var btn=$(this);
+      $("#buttom").load( "/private/img/image?id=&w=36&h=36&watermark=0&type=", function( response, status, xhr ) {
+        $("#imgUploadOK").unbind("click").on("click",function(){
+          btn.find("img").attr("src",$("#imgUploadPicurl").val());
+          btn.find("input[type=hidden]").val($("#imgUploadPicurl").val());
+          $("#imgUpload").modal("hide");
+        });
+        $("#imgUpload").modal("show");
+      });
+    });
+  }
+  function initType(){
+    $("input[type=radio]").on("click",function(){
+      if('1'==$(this).val()){
+        $("#tab tr").each(function () {
+          $(this).children('td').eq(4).show();
+        });
+      }else{
+        $("#tab tr").each(function () {
+          $(this).children('td').eq(4).hide();
+        });
+      }
+    });
+  }
+  $(document).ready(function () {
+    binEvent();
+    initType();
+    $("#btnAdd").on("click",function(){
+      var t=$('input:radio[name=type]:checked').val();
+      var str="";
+      if(t=='0'){
+        str='style="display: none"';
+      }
+      $("#tab tbody").append('<tr align="center"><td height="45">' +
+        '<input type="text" name="spec_value[]" class="form-control" data-parsley-required="true"></td>' +
+        '<td width="2"></td><td><input type="text" name="spec_alias[]" class="form-control"></td><td width="2"></td>' +
+        '<td '+str+'><button type="button" class="btn btn-default btn-sm mr5"> ' +
+        '<img src="/img/empty.bmp" style="height: 20px;width: 20px;"> ' +
+        '<input name="spec_picurl[]" type="hidden" value=""><i class="ti-upload ml5"></i> </button></td>' +
+        '<td><i class="up fa fa-arrow-up" style="cursor:pointer;padding: 5px;" title="向上移动"></i>' +
+        '<i class="down fa fa-arrow-down" style="cursor:pointer;padding: 5px;" title="向下移动"></i>' +
+        '<i class="del fa fa-remove" style="cursor:pointer;padding: 5px;" title="删除"></i></td></tr>');
+      binEvent();
+    });
+
+    $('#addForm').ajaxForm({
+      dataType: 'json',
+      beforeSubmit: function (arr, form, options) {
+        form.find("button:submit").button("loading");
+      },
+      success: function (data, statusText, xhr, form) {
+        if (data.code == 0) {
+          Toast.success(data.msg);
+          //刷新父级菜单
+          form.resetForm();
+          initType();
+          $("#tab tbody").html("");
+        } else {
+          Toast.error(data.msg);
+        }
+        form.find("button:submit").button("reset");
+      }
+    });
+  });
+</script>

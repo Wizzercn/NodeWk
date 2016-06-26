@@ -1,0 +1,31 @@
+<%include top.ejs%>
+<div class="spread hero">
+    <div class="middle">
+        <h1><em><%-sails.__({phrase: 'support', locale:res.locale})%></em></h1>
+        <a href="/about/" class="primary button"><%-sails.__({phrase: 'more', locale:res.locale})%></a>
+    </div>
+</div>
+<%
+var num=parseInt(5*Math.random())+1;
+    console.log(num);
+ %>
+<section class="spread background arrow-bottom">
+    <div class="spread img" style="background-image:url(<%=CssPath%>/pc/image/bg<%=num||1%>.png)"></div>
+</section>
+
+<section class="container experts">
+    <h2><%-sails.__({phrase: 'experts', locale:res.locale})%></h2>
+
+    <ul>
+        <li>
+            <img src="<%=CssPath%>/pc/image/nodejs.png" alt="Node.JS" />
+        </li>
+        <li>
+            <img src="<%=CssPath%>/pc/image/npm.png" alt="Node Package Manager" />
+        </li>
+        <li>
+            <img src="<%=CssPath%>/pc/image/sails.png" alt="Sails.js MVC" />
+        </li>
+    </ul>
+</section>
+<%include buttom.ejs%>

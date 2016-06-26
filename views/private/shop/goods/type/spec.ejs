@@ -1,0 +1,43 @@
+<div id="dialogSpec" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">选择规格</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xs-12">
+            <%list.forEach(function(o){%>
+                <input type="radio" name="spec" value="<%=o.id%>"><span><%=o.name||''%></span>
+              <%});%>
+          </div>
+          <div class="col-xs-12" style="padding-top: 5px;">
+            <div id="specList"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+        <button id="dialogSpecOK" type="button" class="btn btn-primary" data-loading-text="确定...">确 定</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script language="JavaScript">
+  $(document).ready(function () {
+    $("#dialogSpec input[type=radio]").on("click",function(){
+      $.post("/private/shop/goods/type/spec_val/" + $(this).val(), {}, function (data) {
+         if(data.code==0){
+           var str="";
+           $.each(data.data,function(idx,o){
+             str+='<button type="button" class="btn btn-default btn-sm">'+ o.spec_value+'</button> ';
+           });
+           $("#specList").html(str);
+         }else{
+           Toast.error(data.msg);
+         }
+      }, "json");
+    });
+  });
+</script>

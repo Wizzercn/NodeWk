@@ -1,0 +1,29 @@
+<% unit.forEach(function(obj){
+%>
+<tr data-tt-id="<%=obj.id%>" data-tt-parent-id="<%=obj.parentId==0?'':obj.parentId%>" data-tt-branch="<%=obj.hasChildren==1?'true':'false'%>">
+  <td>
+    <span class="pd-l-sm"></span><%-obj.name%>
+  </td>
+  <td><%-obj.address%></td>
+  <td><%-obj.mobile%></td>
+  <td><%-obj.tel%></td>
+  <td>
+    <div class="btn-group">
+      <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+        <i class="ti-settings"></i>
+        <span class="ti-angle-down"></span>
+      </button>
+      <ul class="dropdown-menu" role="menu">
+        <li><a href="/private/sys/unit/detail/<%=obj.id%>" data-toggle="modal"
+               data-target="#dialogUnitDetail">查看</a></li>
+        <li><a href="/private/sys/unit/edit/<%=obj.id%>" data-pjax>修改</a></li>
+        <li><a href="javascript:;" onclick="del(<%=obj.id%>)">删除</a></li>
+        <li class="divider"></li>
+        <li><a href="/private/sys/unit/add?pid=<%=obj.id%>" data-pjax>添加子机构</a></li>
+
+      </ul>
+    </div>
+  </td>
+</tr>
+<%
+}); %>

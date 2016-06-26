@@ -1,0 +1,390 @@
+<%//后台登陆页页面布局%>
+<!DOCTYPE html>
+<html class="signin no-js" lang="zh-CN">
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="renderer" content="webkit">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="<%= sails.config.system.AppName %>">
+  <meta name="keywords" content="wizzer,node,nodejs,shop">
+  <title><%= sails.config.system.AppName %></title>
+  <% if (sails.config.environment === 'production') { %>
+  <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/concat/production.css">
+  <link rel="stylesheet" href="/plugins/jstree/themes/default/style.min.css">
+  <link rel="stylesheet" href="/plugins/datepicker/bootstrap-datetimepicker.min.css">
+  <link rel="stylesheet" href="/plugins/emoji/emoji.css">
+  <%}else{%>
+  <link rel="stylesheet" href="/plugins/stepy/jquery.stepy.css">
+  <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/font-awesome.css">
+  <link rel="stylesheet" href="/css/themify-icons.css">
+  <link rel="stylesheet" href="/css/animate.min.css">
+  <link rel="stylesheet" href="/css/skins/palette.css">
+  <link rel="stylesheet" href="/css/fonts/font.css">
+  <link rel="stylesheet" href="/css/main.css">
+  <link rel="stylesheet" href="/css/panel.css">
+  <link rel="stylesheet" href="/plugins/jstree/themes/default/style.min.css">
+  <link rel="stylesheet" href="/plugins/treetable/jquery.treetable.css">
+  <link rel="stylesheet" href="/plugins/datatables/dataTables.bootstrap.css">
+  <link rel="stylesheet" href="/plugins/chosen/chosen.min.css">
+  <link rel="stylesheet" href="/plugins/datepicker/bootstrap-datetimepicker.min.css">
+  <link rel="stylesheet" href="/plugins/emoji/emoji.css">
+  <link rel="stylesheet" href="/plugins/x-editable/bootstrap-editable.css">
+  <%}%>
+  <!--[if lt IE 9]>
+  <script src="/js/html5shiv.js"></script>
+  <script src="/js/respond.min.js"></script>
+  <script src="/js/json2.js"></script>
+  <![endif]-->
+  <% if(user.loginTheme){ %>
+  <link rel="stylesheet" href="/css/skins/<%= user.loginTheme %>" id="skin">
+  <% }else{ %>
+  <link rel="stylesheet" href="/css/skins/palette.css" id="skin">
+  <% } %>
+  <script src="/plugins/jquery-1.11.1.min.js"></script>
+
+</head>
+<body>
+<div class="gallery-loader" style="background-color:transparent;">
+  <div class="loader"></div>
+</div>
+
+<div class="playground hidden-xs">
+  <div class="options">
+    <div class="pg-close ti-close"></div>
+    <div class="options-container color-options">
+      <h6><%= sails.__('private.index.theme') %></h6>
+      <a onclick="sublime.changeTheme('palette.css')" href="/css/skins/palette.css"
+         class="css_orange cs_color cs_1 <% if(!user.loginTheme || 'palette.css' == user.loginTheme){ %>active<% } %>">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </a>
+      <a onclick="sublime.changeTheme('palette.2.css')" href="/css/skins/palette.2.css"
+         class="css_orange cs_color cs_2 <% if('palette.2.css' == user.loginTheme){ %>active<% } %>">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </a>
+      <a onclick="sublime.changeTheme('palette.3.css')" href="/css/skins/palette.3.css"
+         class="css_orange cs_color cs_3 <% if('palette.3.css' == user.loginTheme){ %>active<% } %>">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </a>
+      <a onclick="sublime.changeTheme('palette.4.css')" href="/css/skins/palette.4.css"
+         class="css_orange cs_color cs_4 <% if('palette.4.css' == user.loginTheme){ %>active<% } %>">
+        <div></div>
+        <div></div>
+        <div></div>
+        <div></div>
+      </a>
+    </div>
+    <div class="options-container">
+      <h6><%= sails.__('private.index.layout') %></h6>
+      <a class="pg-val toggle-sidebar toggle-active <% if(user.loginSidebar){ %>active<% } %>" href="javascript:;">
+        <img src="/img/panel/small.png" alt="">
+      </a>
+      <a class="pg-val toggle-scroll toggle-active <% if(user.loginScroll){ %>active<% } %>" href="javascript:;">
+        <img src="/img/panel/scroll.png" alt="">
+      </a>
+      <a class="pg-val toggle-boxed toggle-active <% if(user.loginBoxed){ %>active<% } %>" href="javascript:;">
+        <img src="/img/panel/boxed.png" alt="">
+      </a>
+    </div>
+    <small class="pg-footer"><i class="ti-info-alt mr5"></i><%= sails.__('private.index.panel') %></small>
+  </div>
+</div>
+<div
+        class="app <% if(user.loginSidebar){ %>small-menu<% } %> <% if(user.loginScroll){ %>fixed-scroll<% } %> <% if(user.loginBoxed){ %>boxed<% } %>">
+  <header class="header header-fixed navbar">
+    <div class="brand">
+
+      <a href="javascript:;" class="ti-menu off-left visible-xs" data-toggle="offscreen" data-move="ltr"></a>
+
+
+      <a href="/sysadmin/home"  data-pjax class="navbar-brand">
+        <img src="/img/logo.png" alt="">
+                <span class="heading-font">
+                <%= sails.config.system.AppShrotName||'' %>
+                </span>
+      </a>
+
+    </div>
+    <ul class="nav navbar-nav navbar-left">
+      <li class="hidden-xs">
+
+        <a href="javascript:;" class="toggle-sidebar">
+          <i class="ti-menu"></i>
+        </a>
+
+      </li>
+
+    </ul>
+    <ul class="topnav nav navbar-nav hidden-xs">
+      <!--<li>-->
+      <!--<a href="/sysadmin/home" data-pjax>-->
+      <!--<i class="ti-home"></i>-->
+      <!--<span>首页</span>-->
+      <!--</a>-->
+      <!--</li>-->
+      <% if(firstMenus){ firstMenus.forEach(function(firstMenu){ %>
+      <li class="dropdown">
+        <a href="javascript:;" data-toggle="dropdown">
+          <% if(firstMenu.icon){ %>
+          <i class="<%= firstMenu.icon %>"></i>
+          <% } %>
+          <span><%= firstMenu.name %></span>
+          <b class="caret"></b>
+        </a>
+        <ul class="dropdown-menu">
+          <% if(secondMenus[firstMenu.path]){ secondMenus[firstMenu.path].forEach(function(secondMenu){ %>
+          <li class="dropdown">
+            <a href="<% if(secondMenu.url){ %> <%= secondMenu.url %> <% }else{ %>javascript:;<% } %>">
+              <% if(secondMenus[secondMenu.path]){ %><i class="toggle-accordion"></i><%}%>
+              <span><%= secondMenu.name %></span>
+            </a>
+            <% if(secondMenus[secondMenu.path]){ %>
+            <ul class="sub-menu">
+              <% secondMenus[secondMenu.path].forEach(function(thMenu){ %>
+              <li class="clearfix" >
+                <a <% if(thMenu.url){ %>href="<%= thMenu.url %>" <% }else{ %>href="javascript:;"
+                        <% } %>>
+                  <span><%= thMenu.name %></span>
+                </a>
+              </li><% });%>
+            </ul><%}%>
+          </li><% });} %>
+
+        </ul>
+      </li><% });} %>
+      <li><a href="/" target="_blank">前台首页</a> </li>
+      <li>
+        <a href="https://github.com/Wizzercn/NodeWk" target="_blank">GitHub</a>
+      </li>
+      <li>
+        <a href="http://www.wizzer.cn" target="_blank">Blog</a>
+      </li>
+      <li>
+        <a href="https://github.com/Wizzercn/NutzWk" target="_blank">NutzWk</a>
+      </li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <!--通知位置-->
+
+      <li class="off-right">
+        <a href="javascript:;" data-toggle="dropdown">
+          <span class="hidden-xs ml10"><%- user.nickname %></span>
+          <i class="ti-angle-down ti-caret hidden-xs"></i>
+        </a>
+        <ul class="dropdown-menu animated fadeInLeft">
+          <li>
+            <a href="/private/sys/user/custom" data-toggle="modal"
+               data-target="#homeDetail"><%= sails.__('private.index.usersetting') %></a>
+          </li>
+
+          <li class="dropdown hidden-xs">
+            <a href="javascript:;" class="pg-toggle">
+              修改页面布局
+            </a>
+          </li>
+          <li>
+            <a href="/private/sys/user/pass" data-toggle="modal"
+               data-target="#homeDetail"><%= sails.__('private.index.userpassword') %></a>
+          </li>
+        </ul>
+      </li>
+      <li class="off-right">
+        <a href="/private/login/logout">
+          <i class="ti-power-off"></i>
+        </a>
+      </li>
+    </ul>
+  </header>
+  <section class="layout">
+
+    <aside class="sidebar offscreen-left">
+
+      <nav class="main-navigation" data-height="auto" data-size="6px" data-distance="0" data-rail-visible="true"
+           data-wheel-step="10">
+        <!--<p class="nav-title">MENU</p>-->
+        <ul class="nav">
+          <li class="open">
+            <a href="javascript:;">
+              <%if(myMenus&&myMenus.length>0){%>
+              <i class="toggle-accordion"></i>
+              <%}%>
+              <i class="ti-heart"></i>
+              <span>常用菜单</span>
+            </a>
+            <%if(myMenus&&myMenus.length>0){%>
+            <ul class="sub-menu">
+              <%myMenus.forEach(function(o){%>
+
+              <li class="active">
+                <a <%if(o.url){%>href="<%=o.url%>" <%if('data-pjax'==o.target){%>data-pjax<%}}else{ %>href="javascript:;"<%}%>>
+                  <span><%=o.name%></span>
+                </a>
+              </li>
+
+              <%});%>
+            </ul>
+            <%}%>
+          </li>
+          <% if(path.length > 8 && secondMenus[path.substring(0, path.length - 8)]){ %>
+          <% secondMenus[path.substring(0, path.length - 8)].forEach(function(firstMenu){ %>
+          <li <% if(path == firstMenu.path){ %>class="active"
+              <% }else if(path.indexOf(firstMenu.path) == 0){ %>class="open"
+                  <% } %>
+                  >
+            <a <% if(firstMenu.url){ %>href="<%= firstMenu.url %>" <%if('data-pjax'==firstMenu.target){%>data-pjax<%}%><% }else{ %>href="javascript:;"
+                    <% } %>
+                    >
+              <% if(secondMenus[firstMenu.path]){ %>
+              <i class="toggle-accordion"></i>
+              <% } %>
+              <% if(firstMenu.icon){ %>
+              <i class="<%= firstMenu.icon %>"></i>
+              <% }else{ %>
+              <i class="ti-map"></i>
+              <% } %>
+              <span><%= firstMenu.name %></span>
+
+            </a>
+            <% if(secondMenus[firstMenu.path]){ %>
+            <ul class="sub-menu">
+              <% secondMenus[firstMenu.path].forEach(function(secondMenu){ %>
+
+              <li <% if(path == secondMenu.path){ %>class="active"
+                  <% }else if(path.indexOf(secondMenu.path) == 0){ %>class="open"
+                      <% } %>
+                      >
+                <a <% if(secondMenu.url){ %>href="<%= secondMenu.url %>" <%if('data-pjax'==secondMenu.target){%>data-pjax<%}%><% }else{ %>href="javascript:;"<% } %>
+                        >
+                  <% if(secondMenus[secondMenu.path]){ %>
+                  <i class="toggle-accordion"></i>
+                  <% } %>
+                  <span><%= secondMenu.name %></span>
+                </a>
+              </li>
+
+              <% }); %>
+            </ul>
+            <% } %>
+          </li>
+          <% });}else{ %>
+
+          <% } %>
+
+        </ul>
+      </nav>
+    </aside>
+    <section class="main-content" id="container">
+      <%- body %>
+    </section>
+  </section>
+
+
+</div>
+<div id="homeDetail" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    </div>
+  </div>
+</div>
+<!--script-->
+<% if (sails.config.environment === 'production') { %>
+<script src="/min/production.min.js"></script>
+<%if(req.url.indexOf('private/wx')>0){%>
+<script src="/plugins/ueditor/ueditor.configWx.js"></script>
+<%}else{%>
+<script src="/plugins/ueditor/ueditor.config.js"></script>
+<%}%>
+<script src="/plugins/ueditor/ueditor.all.min.js"></script>
+<script src="/plugins/parsley.min.js"></script>
+<script src="/plugins/parsley.zh_cn.js"></script>
+<%}else{%>
+<script src="/plugins/modernizr.js"></script>
+<script src="/js/jquery.pjax.js"></script>
+<script src="/bootstrap/js/bootstrap.js"></script>
+<script src="/plugins/jquery.form.js"></script>
+<script src="/plugins/parsley.min.js"></script>
+<script src="/plugins/parsley.zh_cn.js"></script>
+<script src="/plugins/jquery.sortable.js"></script>
+<script src="/plugins/jquery.nestable.js"></script>
+<script src="/plugins/icheck/icheck.js"></script>
+<script src="/plugins/jquery.slimscroll.min.js"></script>
+<script src="/plugins/jquery.easing.min.js"></script>
+<script src="/plugins/appear/jquery.appear.js"></script>
+<script src="/plugins/jquery.placeholder.js"></script>
+<script src="/plugins/fastclick.js"></script>
+<script src="/plugins/count-to/jquery.countTo.js"></script>
+<script src="/js/toast.js"></script>
+<script src="/plugins/chosen/chosen.jquery.min.js"></script>
+<script src="/plugins/treetable/jquery.treetable.js"></script>
+<script src="/plugins/datatables/jquery.dataTables.js"></script>
+<script src="/plugins/datatables/dataTables.bootstrap.js"></script>
+<script src="/plugins/jstree/jstree.min.js"></script>
+<script src="/plugins/switchery/switchery.js"></script>
+<script src="/plugins/stepy/jquery.stepy.js"></script>
+<script src="/plugins/stepy/jquery.validate.min.js"></script>
+<script src="/plugins/icheck/icheck.js"></script>
+<script src="/plugins/chosen/chosen.jquery.min.js"></script>
+<script src="/plugins/jquery.form.js"></script>
+<script src="/plugins/uploadifive/jquery.uploadifive.min.js"></script>
+<script src="/plugins/datepicker/bootstrap-datetimepicker.min.js"></script>
+<script src="/plugins/datepicker/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="/plugins/emoji/emoji.js"></script>
+<script src="/plugins/sorttable/Sortable.min.js"></script>
+<script src="/plugins/jquery.qrcode.min.js"></script>
+<script src="/plugins/jquery.sparkline.js"></script>
+<script src="/plugins/x-editable/bootstrap-editable.js"></script>
+<%if(req.url.indexOf('private/wx')>0){%>
+<script src="/plugins/ueditor/ueditor.configWx.js"></script>
+<%}else{%>
+<script src="/plugins/ueditor/ueditor.config.js"></script>
+<%}%>
+<script src="/plugins/ueditor/ueditor.all.min.js"></script>
+<script src="/js/form.js"></script>
+<script src="/js/offscreen.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/page.js"></script>
+<script src="/js/date.js"></script>
+<%}%>
+<script type="text/javascript">
+  $(document).ready(function () {
+    if($.support.pjax) {
+      $(document).pjax('a[data-pjax]', '#container', {maxCacheLength:0,push:false, replace:true,fragment: '#container', timeout: 8000});
+      $('.main-navigation a[data-pjax]').on('click',function(){
+        $('.main-navigation a[data-pjax]').each(function(){
+          $(this).parent().removeClass('active');
+        });
+        $(this).parent().addClass('active');
+      });
+      $(document).on('pjax:send', function () { //pjax链接点击后显示加载动画；
+        $(".gallery-loader").fadeIn();
+      });
+      $(document).on('pjax:complete', function () { //pjax链接加载完成后隐藏加载动画；
+        setTimeout(function(){$(".gallery-loader").fadeOut()},250);
+      });
+    }
+    try {
+      $(".gallery-loader").fadeOut();
+    } catch (e) {
+    }
+    $('#homeDetail').on('hidden.bs.modal',function(){
+      $(this).removeData("bs.modal");
+    });
+    if (console)
+      console.log("%c^_^ Wizzer.cn","color:red;font-size:14px;");
+  });
+
+</script>
+<!--script-->
+</body>
+</html>

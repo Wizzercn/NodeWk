@@ -1,0 +1,36 @@
+redis:
+  image: redis
+db:
+  image: mariadb:5.5
+  environment:
+    "MYSQL_ROOT_PASSWORD": "root"
+    "MYSQL_DATABASE": "nodewk"
+  command: "mysqld --character-set-server=utf8"
+  ports:
+    - "127.0.0.1:3306:3306"
+  volumes:
+    - "/node/nodewk/db:/var/lib/mysql"
+web:
+  image: wizzer/nodewk
+  links:
+    - redis
+    - db
+  environment:
+    "MYSQL_HOST": "db"
+    "MYSQL_USER": "root"
+    "MYSQL_PASSWORD": "root"
+    "MYSQL_DATABASE": "nodewk"
+    "MYSQL_LIMIT": 150
+    "REDIS_HOST": "redis"
+    "REDIS_PASS": ""
+    "LOG_LEVEL": "verbose"
+    "LOG_SQL": "false"
+    "PORT": 1337
+    "NODE_ENV": "production"
+  command: "pm2 start /node/nodewk/app.js --no-daemon"
+  ports:
+    - "1337:1337"
+  volumes:
+    - "/node/nodewk/cert:/node/nodewk/cert"
+    - "/node/nodewk/upload:/node/nodewk/upload"
+    - "/node/nodewk/backup:/node/nodewk/backup"

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta chartset="utf-8" />
+  <title><%=siteTitle||sails.config.system.SiteConfig.site_name||''%></title>
+  <link rel="stylesheet" type="text/css" href="<%=CssPath%>/wap/css/css.css" />
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
+  <meta content="yes" name="apple-mobile-web-app-capable" />
+  <meta content="black" name="apple-mobile-web-app-status-bar-style" />
+  <meta content="telephone=no" name="format-detection" />
+  <script src="<%=CssPath%>/wap/js/zepto.min.js"></script>
+  <script src="<%=CssPath%>/wap/js/TouchSlide.js"></script>
+  <script src="<%=CssPath%>/wap/js/tool.js"></script>
+  <script src="<%=CssPath%>/wap/js/common.js"></script>
+  <script>
+    var csspath = '<%=CssPath%>';
+  </script>
+</head>
+<body class="has_bnav">
+<%- body %>
+</body>
+</html>

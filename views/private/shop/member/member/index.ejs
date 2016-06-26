@@ -1,0 +1,209 @@
+<header class="header navbar bg-white shadow">
+  <div class="btn-group tool-button">
+    <a class="btn btn-primary navbar-btn" href="/private/shop/member/member/add" data-pjax><i class="ti-plus"></i> 添加会员</a>
+    <button class="btn btn-danger navbar-btn" onclick="delCheck()"><i class="ti-close"></i> 删除选中</button>
+  </div>
+</header>
+<div class=panel-body style="padding-top: 50px;">
+  <div class="table-responsive no-border">
+    <input id="unitid" type="hidden">
+    <table class="table table-bordered table-striped mg-t datatable">
+      <thead>
+      <tr>
+        <th>会员昵称</th>
+        <th>会员等级</th>
+        <th>登录帐号</th>
+        <th>手机号码</th>
+        <th>预存款</th>
+        <th>积分</th>
+        <th>订单数</th>
+        <th>注册时间</th>
+        <th>操作</th>
+    </table>
+  </div>
+</div>
+<div id="dialogDelete" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">删除</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xs-12">
+            删除后无法恢复，确定删除吗？ <br/>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+        <button id="ok" type="button" class="btn btn-primary" data-loading-text="正在删除...">确 定</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="dialogDetail" class="modal fade bs-modal-sm" tabindex="-3" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+    </div>
+  </div>
+</div>
+<script language="JavaScript">
+  var datatable;
+  function initDatatable() {
+    datatable = $('.datatable').DataTable({
+      "dom": '<"toolbar">frtip',
+      "searching": false,
+      "processing": false,
+      "serverSide": true,
+      "select": true,
+      "ordering": true,
+      "language": {
+        "url": "/plugins/datatables/cn.json"
+      },
+      "preDrawCallback": function () {
+        sublime.showLoadingbar($(".main-content"));
+      },
+      "drawCallback": function () {
+        sublime.closeLoadingbar($(".main-content"));
+      },
+      "ajax": {
+        "url": "/private/shop/member/member/data",
+        "type": "post",
+        "data": function (d) {
+        }
+      },
+      "order": [[7, "desc"]],
+      "columns": [
+        {"data": "nickname", "bSortable": true},
+        {"data": "lv_id", "bSortable": true},
+        {"data": "accounts", "bSortable": true},
+        {"data": "mobile", "bSortable": true},
+        {"data": "money", "bSortable": true},
+        {"data": "score", "bSortable": true},
+        {"data": "order_num", "bSortable": true},
+        {"data": "reg_time", "bSortable": true}
+      ],
+      "columnDefs": [
+        {
+          "render": function (data, type, row) {
+            if(row.lv_id)
+              return row.lv_id.name;
+            return '';
+          },
+          "targets": 1
+        },
+        {
+          "render": function (data, type, row) {
+            var s='';
+            if(row.accounts&&row.accounts.length>0)
+            {
+              $.each(row.accounts,function(i,o){
+                s+='用户名:'+ o.login_name;
+              });
+            }
+            if(row.binds&&row.binds.length>0)
+            {
+              $.each(row.binds,function(i,o){
+                if(o.bind_type=='weixin'){
+                  s+='<br>微信绑定:'+ o.bind_nickname;
+                }else if(o.bind_type=='qq'){
+                  s+='<br>QQ绑定:'+ o.bind_nickname;
+                }else if(o.bind_type=='weibo'){
+                  s+='<br>微博绑定:'+ o.bind_nickname;
+                }
+              });
+            }
+            return s;
+          },
+          "targets": 2
+        },
+        {
+          "render": function (data, type, row) {
+            return '&yen;'+setPrice(data);
+          },
+          "targets": 4
+        },
+        {
+          "render": function (data, type, row) {
+            return new Date(data*1000).Format('yyyy-MM-dd hh:mm:ss');
+          },
+          "targets": 7
+        },
+        {
+          "render": function (data, type, row) {
+            return '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">' +
+              ' <i class="ti-settings"></i> <span class="ti-angle-down"></span></button><ul class="dropdown-menu" role="menu">' +
+              '<li><a href="/private/shop/member/member/detail/' + row.id + '" data-toggle="modal" data-target="#dialogDetail">会员信息</a></li>' +
+              '<li><a href="javascript:;" onclick="order(' + row.id + ')">订单</a></li>' +
+              '<li class="divider"></li>' +
+              '<li><a href="javascript:;" onclick="money(' + row.id + ')">预存款</a></li>' +
+              '<li><a href="javascript:;" onclick="score(' + row.id + ')">积分</a></li>' +
+              '<li class="divider"></li>' +
+              '<li><a href="/private/shop/member/member/edit/' + row.id + '" data-pjax>编辑</a></li>' +
+              '<li><a href="javascript:;" onclick="del(' + row.id + ')">删除</a></li>' +
+              '</ul></div>';
+          },
+          "targets": 8
+        }
+      ]
+    });
+    datatable.on('click', 'tr', function () {
+      $(this).toggleClass('selected');
+    });
+    $("#searchBtn").on('click', function () {
+      datatable.ajax.reload();
+    });
+  }
+  function del(id) {
+    var dialog = $("#dialogDelete");
+    dialog.modal("show");
+    dialog.find("#ok").unbind("click");
+    dialog.find("#ok").bind("click", function (event) {
+      var btn = $(this);
+      btn.button("loading");
+      $.post("/private/shop/member/member/delete/" + id, {}, function (data) {
+        if (data.code == 0) {
+          datatable.ajax.reload(null,false);
+        } else {
+          Toast.error(data.msg);
+        }
+        //重置按钮状态，关闭提示框
+        btn.button("reset");
+        dialog.modal("hide");
+      }, "json");
+    });
+  }
+  function delCheck() {
+    var chks = datatable.rows('.selected').data();
+    if (chks.length > 0) {
+      var ids = [];
+      $.each(datatable.rows('.selected').data(), function (i, n) {
+        ids.push(n.id);
+      });
+      var dialog = $("#dialogDelete");
+      dialog.modal("show");
+      dialog.find("#ok").unbind("click");
+      dialog.find("#ok").bind("click", function (event) {
+        var btn = $(this);
+        btn.button("loading");
+        $.post("/private/shop/member/member/delete", {ids: ids}, function (data) {
+          if (data.code == 0) {
+            datatable.ajax.reload(null,false);
+          } else {
+            Toast.error(data.msg);
+          }
+          btn.button("reset");
+          dialog.modal("hide");
+        }, "json");
+      });
+    } else {
+      Toast.warning("请先选择要删除的项！");
+    }
+  }
+  $(function () {
+    initDatatable();
+  });
+</script>

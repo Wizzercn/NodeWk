@@ -1,0 +1,19 @@
+
+<!DOCTYPE html>
+<html class="no-js">
+<head>
+  <meta charset="utf-8">
+  <title><%=sails.__({phrase: 'sitename', locale:res.locale})%></title>
+  <%if(sails.config.system.SiteConfig.seo_keywords){%><meta name="keywords" content="<%=sails.config.system.SiteConfig.seo_keywords%>"/><%}%>
+  <%if(sails.config.system.SiteConfig.seo_description){%><meta name="description" content="<%=sails.config.system.SiteConfig.seo_description%>"/><%}%>
+  <meta http-equiv="X-UA-Compatible" content="ie=edge;chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Nodeshop.cn">
+  <link href="http://fonts.useso.com/css?family=Roboto:500,300,300italic" rel="stylesheet" type="text/css">
+  <link href="<%=CssPath%>/pc/css/design.css" rel="stylesheet">
+  <link href="<%=CssPath%>/pc/css/base.min.css" rel="stylesheet">
+</head>
+<body>
+<%- body %>
+</body>
+</html>

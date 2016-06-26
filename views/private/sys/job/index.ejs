@@ -1,0 +1,125 @@
+<div class=panel-body style="padding-top: 10px;">
+  <div class="table-responsive no-border">
+    <table class="table table-bordered table-striped mg-t datatable">
+      <thead>
+      <tr>
+        <th>任务名</th>
+        <th>定时策略</th>
+        <th>启用状态</th>
+        <th>最近执行时间</th>
+        <th>执行状态</th>
+        <th>操作</th>
+    </table>
+  </div>
+</div>
+<div id="dialogDetail" class="modal fade bs-modal" tabindex="-3" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+    </div>
+  </div>
+</div>
+<script language="JavaScript">
+  var datatable;
+  function initDatatable() {
+    datatable = $('.datatable').DataTable({
+      "dom": '<"toolbar">frtip',
+      "searching": false,
+      "processing": false,
+      "serverSide": true,
+      "select": true,
+      "ordering": true,
+      "language": {
+        "url": "/plugins/datatables/cn.json"
+      },
+      "preDrawCallback": function () {
+        sublime.showLoadingbar($(".main-content"));
+      },
+      "drawCallback": function () {
+        sublime.closeLoadingbar($(".main-content"));
+      },
+      "ajax": {
+        "url": "/private/sys/job/data",
+        "type": "post",
+        "data": function (d) {
+        }
+      },
+      "order": [[0, "asc"]],
+      "columns": [
+        {"data": "note", "bSortable": true},
+        {"data": "cron", "bSortable": true},
+        {"data": "disabled", "bSortable": true},
+        {"data": "updateAt", "bSortable": true},
+        {"data": "updateStatus", "bSortable": true}
+      ],
+      "columnDefs": [
+        {
+          "render": function (data, type, row) {
+            if (!data) {
+              return '<i id="disable_' + row.id + '" class="fa fa-circle text-success ml5"></i>';
+            } else {
+              return '<i id="disable_' + row.id + '" class="fa fa-circle text-danger ml5"></i>';
+            }
+          },
+          "targets": 2
+        },
+        {
+          "render": function (data, type, row) {
+            if(data)
+              return new Date(data*1000).Format("yyyy-MM-dd hh:mm:ss");
+            return '';
+          },
+          "targets": 3
+        },
+        {
+          "render": function (data, type, row) {
+            if(data==true)
+              return '成功';
+            if(data==false)
+              return '<a href="javascript:;" style="color:#428bca" onclick="Toast.error(\''+row.updateTxt+'\');">失败</a>';
+            return '';
+          },
+          "targets": 4
+        },
+        {
+          "render": function (data, type, row) {
+            return '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">' +
+              ' <i class="ti-settings"></i> <span class="ti-angle-down"></span></button><ul class="dropdown-menu" role="menu">' +
+              '<li><a href="/private/sys/job/edit/' + row.id + '" data-toggle="modal" data-target="#dialogDetail">修改</a></li>' +
+              '<li class="divider"></li>' +
+              '<li><a href="javascript:;" onclick="enable('+row.id+')">启用</a></li>' +
+              '<li><a href="javascript:;" onclick="disable('+row.id+')">禁用</a></li>' +
+              '</ul></div>';
+          },
+          "targets": 5
+        }
+      ]
+    });
+    datatable.on('click', 'tr', function () {
+      $(this).toggleClass('selected');
+    });
+  }
+  function enable(id) {
+    $.post("/private/sys/job/enable/" + id, {}, function (data) {
+      if (data.code == 0) {
+        $("#disable_" + id).attr("class", "fa fa-circle text-success ml5");
+      } else {
+        Toast.error(data.msg);
+      }
+    }, "json");
+  }
+  function disable(id) {
+    $.post("/private/sys/job/disable/" + id, {}, function (data) {
+      if (data.code == 0) {
+        $("#disable_" + id).attr("class", "fa fa-circle text-danger ml5");
+      } else {
+        Toast.error(data.msg);
+      }
+    }, "json");
+  }
+  $(function () {
+    initDatatable();
+    $("#dialogDetail").on("hidden.bs.modal", function() {
+      $(this).removeData("bs.modal");
+    });
+  });
+</script>

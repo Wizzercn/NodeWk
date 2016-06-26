@@ -1,0 +1,292 @@
+<header class="header navbar bg-white shadow">
+  <div class="btn-group tool-button">
+    <a class="btn btn-primary navbar-btn" href="/private/shop/goods/goods/add" data-pjax><i class="ti-plus"></i> 添加商品</a>
+    <div class="btn-group tool-button" style="padding-top: 8px;">
+      <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+        批量操作<span class="ti-angle-down"></span></button>
+      <ul class="dropdown-menu" role="menu">
+        <li><a href="javascript:;" onclick="delCheck()">批量删除</a></li>
+        <li><a href="javascript:;" onclick="upCheck()">批量上架</a></li>
+        <li><a href="javascript:;" onclick="downCheck()">批量下架</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="pull-right">
+    <button class="btn btn-primary navbar-btn" onclick="sublime.toggleFilter('.cd-panel')"><i
+        class="fa fa-sliders"></i> 筛选
+    </button>
+  </div>
+</header>
+<div class="cd-panel from-right">
+  <header class="cd-panel-header">
+    <h4>高级筛选</h4>
+  </header>
+  <div class="cd-panel-container">
+    <div class="cd-panel-content shadow">
+      <div class="form-group">
+        <label for="name">商品名称</label>
+        <input type="text" id="name" name="name" onclick="this.value=''" class="form-control" placeholder="商品名称">
+      </div>
+      <button id="searchBtn" type="button" class="btn btn-default">查询</button>
+    </div>
+  </div>
+</div>
+<div class=panel-body style="padding-top: 50px;">
+  <div class="table-responsive no-border">
+    <input id="unitid" type="hidden">
+    <table class="table table-bordered table-striped mg-t datatable">
+      <thead>
+      <tr>
+        <th>商品名称</th>
+        <th>类型</th>
+        <th>分类</th>
+        <th>上架</th>
+        <th>排序</th>
+        <th>操作</th>
+    </table>
+  </div>
+</div>
+<div id="dialogDelete" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">删除</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xs-12">
+            删除后无法恢复，确定删除吗？ <br/>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+        <button id="ok" type="button" class="btn btn-primary" data-loading-text="正在删除...">确 定</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="dialogQrcode" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">商品二维码</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xs-12" style="text-align: center">
+            <div id="qrName"></div>
+          </div>
+          <div class="col-xs-12" style="text-align: center">
+            <div id="qrCode"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关 闭</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script language="JavaScript">
+  var datatable;
+  function initDatatable() {
+    datatable = $('.datatable').DataTable({
+      "dom": '<"toolbar">frtip',
+      "searching": false,
+      "processing": false,
+      "serverSide": true,
+      "select": true,
+      "ordering": true,
+      "language": {
+        "url": "/plugins/datatables/cn.json"
+      },
+      "preDrawCallback": function () {
+        sublime.showLoadingbar($(".main-content"));
+      },
+      "drawCallback": function () {
+        sublime.closeLoadingbar($(".main-content"));
+        $(".location").editable();
+      },
+      "ajax": {
+        "url": "/private/shop/goods/goods/data",
+        "type": "post",
+        "data": function (d) {
+          d.name = $('#name').val();
+        }
+      },
+      "order": [[4, "desc"]],
+      "columns": [
+        {"data": "name", "bSortable": true},
+        {"data": "typeid", "bSortable": false},
+        {"data": "classid", "bSortable": false},
+        {"data": "disabled", "bSortable": true},
+        {"data": "location", "bSortable": true}
+      ],
+      "columnDefs": [
+        {
+          "render": function (data, type, row) {
+            if(row.typeid){
+              return  row.typeid.name;
+            }
+            return  '[通用商品]';
+          },
+          "targets": 1
+        },
+        {
+          "render": function (data, type, row) {
+            if(row.classid){
+              return  row.classid.name;
+            }
+            return  '';
+          },
+          "targets": 2
+        },
+        {
+          "render": function (data, type, row) {
+            return  data==true?'<span id="up'+row.id+'">否</span>':'<span id="up'+row.id+'">是</span>';
+          },
+          "targets": 3
+        },
+        {
+          "render": function (data, type, row) {
+            return  '<a class="location" href="#" id="location'+row.id+'" data-url="/private/shop/goods/goods/location" data-type="text" data-pk="'+row.id+'" data-title="填写排序字段" class="editable editable-click" data-original-title="" title="" style="background-color: rgba(0, 0, 0, 0);">'+data+'</a>';
+          },
+          "targets": 4
+        },
+        {
+          "render": function (data, type, row) {
+            return '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">' +
+              ' <i class="ti-settings"></i> <span class="ti-angle-down"></span></button><ul class="dropdown-menu" role="menu">' +
+              '<li><a href="/private/shop/goods/goods/edit/' + row.id + '" data-pjax>编辑</a></li>' +
+              '<li class="divider"></li>'+
+              '<li><a href="javascript:;" onclick="up(' + row.id + ')">上架</a></li>' +
+              '<li><a href="javascript:;" onclick="down(' + row.id + ')">下架</a></li>' +
+              '<li><a href="javascript:;" onclick="qrcode(' + row.id + ',\''+row.name+'\')">二维码</a></li>' +
+              '<li class="divider"></li>'+
+              '<li><a href="javascript:;" onclick="del(' + row.id + ')">删除</a></li>' +
+              '</ul></div>';
+          },
+          "targets": 5
+        }
+      ]
+    });
+    datatable.on('click', 'tr', function () {
+      $(this).toggleClass('selected');
+    });
+    $("#searchBtn").on('click', function () {
+      datatable.ajax.reload();
+    });
+  }
+  function qrcode(id,name){
+    $("#qrName").html(name);
+    $("#qrCode").html("");
+    $("#qrCode").qrcode({width: 120,height: 120,text: "http://<%=sails.config.system.AppDomain%>/prodcut/"+id});
+    $("#dialogQrcode").modal("show");
+  }
+  function del(id) {
+    var dialog = $("#dialogDelete");
+    dialog.modal("show");
+    dialog.find("#ok").unbind("click");
+    dialog.find("#ok").bind("click", function (event) {
+      var btn = $(this);
+      btn.button("loading");
+      $.post("/private/shop/goods/goods/delete/" + id, {}, function (data) {
+        if (data.code == 0) {
+          datatable.ajax.reload(null,false);
+        } else {
+          Toast.error(data.msg);
+        }
+        //重置按钮状态，关闭提示框
+        btn.button("reset");
+        dialog.modal("hide");
+      }, "json");
+    });
+  }
+  function delCheck() {
+    var chks = datatable.rows('.selected').data();
+    if (chks.length > 0) {
+      var ids = [];
+      $.each(datatable.rows('.selected').data(), function (i, n) {
+        ids.push(n.id);
+      });
+      var dialog = $("#dialogDelete");
+      dialog.modal("show");
+      dialog.find("#ok").unbind("click");
+      dialog.find("#ok").bind("click", function (event) {
+        var btn = $(this);
+        btn.button("loading");
+        $.post("/private/shop/goods/goods/delete", {ids: ids}, function (data) {
+          if (data.code == 0) {
+            datatable.ajax.reload(null,false);
+          } else {
+            Toast.error(data.msg);
+          }
+          btn.button("reset");
+          dialog.modal("hide");
+        }, "json");
+      });
+    } else {
+      Toast.warning("请先选择商品！");
+    }
+  }
+  function up(id) {
+    $.post("/private/shop/goods/goods/up/" + id, {}, function (data) {
+      if (data.code == 0) {
+        $("#up"+id).html('是');
+      } else {
+        Toast.error(data.msg);
+      }
+    }, "json");
+  }
+  function upCheck() {
+    var chks = datatable.rows('.selected').data();
+    if (chks.length > 0) {
+      var ids = [];
+      $.each(datatable.rows('.selected').data(), function (i, n) {
+        ids.push(n.id);
+      });
+      $.post("/private/shop/goods/goods/up", {ids: ids}, function (data) {
+        if (data.code == 0) {
+          datatable.ajax.reload(null,false);
+        } else {
+          Toast.error(data.msg);
+        }
+      }, "json");
+    } else {
+      Toast.warning("请先选择商品！");
+    }
+  }
+  function down(id) {
+    $.post("/private/shop/goods/goods/down/" + id, {}, function (data) {
+      if (data.code == 0) {
+        $("#up"+id).html('否');
+      } else {
+        Toast.error(data.msg);
+      }
+    }, "json");
+  }
+  function downCheck() {
+    var chks = datatable.rows('.selected').data();
+    if (chks.length > 0) {
+      var ids = [];
+      $.each(datatable.rows('.selected').data(), function (i, n) {
+        ids.push(n.id);
+      });
+      $.post("/private/shop/goods/goods/down", {ids: ids}, function (data) {
+        if (data.code == 0) {
+          datatable.ajax.reload(null,false);
+        } else {
+          Toast.error(data.msg);
+        }
+      }, "json");
+    } else {
+      Toast.warning("请先选择商品！");
+    }
+  }
+  $(function () {
+    initDatatable();
+  });
+</script>

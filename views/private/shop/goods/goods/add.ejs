@@ -1,0 +1,630 @@
+<style>
+  #img{
+    list-style-type: none;
+    margin: 2px;
+    height: 118px;
+    float: left;
+  }
+  .divImg{
+    float: left;
+    margin: 2px;
+    padding: 2px;
+    height:108px;
+    width:100px;
+    border: 1px solid #dcdcdc;
+    cursor: pointer;
+  }
+  .divImgD{
+    float: left;
+    margin: 2px;
+    padding: 2px;
+    height:108px;
+    width:100px;
+    border: 1px solid red;
+    cursor: pointer;
+  }
+</style>
+<header class="header navbar bg-white shadow">
+  <div class="btn-group tool-button">
+    <a class="btn btn-primary navbar-btn" href="/private/shop/goods/goods" data-pjax><i class="ti-angle-left"></i> 返回</a>
+  </div>
+  <div class="pull-right">
+    <div class="btn-group tool-button">
+      <button class="btn btn-primary navbar-btn" type="button" id="save"> 保存</button>
+    </div>
+  </div>
+</header>
+
+<div class="content-wrap">
+  <div class="wrapper" style="min-height:500px;">
+      <form id="addForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+            action="/private/shop/goods/goods/addDo" method="post">
+        <input type="hidden" name="id" id="id" value="">
+        <div class="box-tab tabs-left">
+          <ul class="nav nav-tabs">
+            <li class="active"><a href="#base" data-toggle="tab">基本信息</a>
+            </li>
+            <li id="kzsx_tab" class="" style="display: none"><a href="#kzsx" data-toggle="tab">扩展属性</a>
+            </li>
+            <li class=""><a href="#inf" data-toggle="tab">详细介绍</a>
+            </li>
+          </ul>
+          <div class="tab-content text-center">
+            <div class="tab-pane fade active in" id="base">
+              <div class="row mb10">
+                <div class="col-lg-12">
+                  <div class="form-group has-feedback">
+                    <label for="classid" class="col-sm-2 control-label">商品分类</label>
+
+                    <div class="col-sm-8">
+                      <div class="input-group">
+                        <input id="classid" type="text" class="form-control" placeholder="请选择商品分类" disabled
+                               value="<%=typeof parentUnit!='undefined'?parentUnit.name:'' %>"/>
+
+			                             		<span class="input-group-btn">
+			                             			<button type="button" class="btn btn-primary" data-toggle="modal"
+                                                data-target="#dialogSelectParentUnit"><i class="ti-plus"></i>选择
+                                        </button>
+			                             		</span>
+
+                      </div>
+                      <input type="hidden" name="classid" value="<%=typeof parentUnit!='undefined'?parentUnit.id:0 %>">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="typeid" class="col-sm-2 control-label">商品类型</label>
+
+                    <div class="col-sm-8">
+                      <select id="typeid" name="typeid" class="form-control">
+                        <option value="0">通用商品</option>
+                        <%if(typelist){
+                        typelist.forEach(function(o){
+                        %>
+                        <option value="<%=o.id%>"><%=o.name%></option>
+                        <%
+                        });
+                        }%>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="name" class="col-sm-2 control-label"><span style="color: red">*</span>商品名称</label>
+
+                    <div class="col-sm-8">
+                      <input type="text" id="name" class="form-control" name="name" data-parsley-required="true"
+                             placeholder="商品名称">
+
+
+                    </div>
+                  </div>
+                  <!--<div class="form-group">-->
+                    <!--<label for="bn" class="col-sm-2 control-label">商品编号</label>-->
+
+                    <!--<div class="col-sm-8">-->
+                      <!--<input type="text" id="bn" class="form-control" name="bn" data-parsley-required="true"-->
+                             <!--placeholder="商品编号(不填则自动生成)">-->
+                    <!--</div>-->
+                  <!--</div>-->
+                  <div class="form-group">
+                    <label for="bn" class="col-sm-2 control-label">品牌</label>
+
+                    <div class="col-sm-8">
+                      <select id="brandid" name="brandid" class="form-control">
+                        <option value="0">  </option>
+                        <%if(brandlist){
+                        brandlist.forEach(function(o){
+                        %>
+                        <option value="<%=o.id%>"><%=o.name%></option>
+                        <%
+                        });
+                        }%>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="bn" class="col-sm-2 control-label">商品简介</label>
+
+                    <div class="col-sm-8">
+                      <textarea type="textarea" placeholder="简短的商品介绍,请不要超过70个字" class="form-control"  name="info" style="resize:none;" cols="50" rows="3" maxlength="70" ></textarea>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="bn" class="col-sm-2 control-label">商品相册</label>
+
+                    <div class="col-sm-8">
+                      <div id="queue"></div>
+                      <div >
+                        <input id="file_upload" name="file_upload" type="file" multiple="true">
+
+                      </div>
+                      <div id="img">
+                      </div>
+                  </div>
+                  </div>
+                  <div id="sp_new" style="display: none">
+                  </div>
+                  <div id="sp">
+                  <div class="form-group">
+                    <label for="bn" class="col-sm-2 control-label">销售价</label>
+
+                    <div class="col-sm-8">
+                      <input type="text" id="price" class="form-control" style="width: 120px;" name="price[]" placeholder="销售价">
+                      <input type="hidden" name="lvprice[]" value="[]">
+<%if(lvlist.length>0){%>
+
+                      <button class="btn btn-primary" style="float: left;margin-top: 2px;" type="button" data-toggle="modal"
+                              data-target="#dialogLv">编辑会员价格</button>
+<%}%>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="bn" class="col-sm-2 control-label">市场价</label>
+
+                    <div class="col-sm-8">
+                      <input type="text" id="priceMarket" class="form-control" style="width: 120px;" name="priceMarket[]" placeholder="市场价">
+
+                    </div>
+                  </div>
+                  <div class="form-group" style="display: none">
+                    <label for="priceCost" class="col-sm-2 control-label">成本价</label>
+
+                    <div class="col-sm-8">
+                      <input type="text" id="priceCost" class="form-control" style="width: 120px;" name="priceCost[]" placeholder="前台不显示">
+
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="pbn" class="col-sm-2 control-label">货号</label>
+
+                    <div class="col-sm-8">
+                      <input type="text" id="pbn" value="<%=pn||''%>" class="form-control" name="pbn[]" placeholder="货号(不填则自动生成)">
+
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="weight" class="col-sm-2 control-label">重量</label>
+
+                    <div class="col-sm-8">
+                      <input type="text" id="weight" class="form-control" style="width: 120px;" name="weight[]" placeholder="克(g)">
+
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="stock" class="col-sm-2 control-label">库存</label>
+
+                    <div class="col-sm-8">
+                      <input type="text" id="stock" class="form-control" style="width: 120px;" name="stock[]" placeholder="库存">
+
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="buyMin" class="col-sm-2 control-label">最小购买量</label>
+
+                    <div class="col-sm-8">
+                      <input type="text" id="buyMin" class="form-control" style="width: 120px;" value="1" name="buyMin[]" placeholder="默认为1">
+
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="buyMax" class="col-sm-2 control-label">最大购买量</label>
+
+                    <div class="col-sm-8">
+                      <input type="text" id="buyMax" class="form-control" style="width: 120px;" value="100"  name="buyMax[]" placeholder="默认为100">
+                    </div>
+                  </div>
+                  <div class="form-group" id="gg" style="display: none">
+                    <label for="gg" class="col-sm-2 control-label">规格</label>
+
+                    <div class="col-sm-8">
+                      <button id="specBtn" class="btn btn-primary" style="float: left;" type="button">开启规格</button>
+                    </div>
+                  </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="unit" class="col-sm-2 control-label">计量单位</label>
+
+                    <div class="col-sm-8">
+                      <input type="text" class="form-control" style="width: 120px;" name="unit" placeholder="计量单位">
+
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label for="unit" class="col-sm-2 control-label">是否上架</label>
+
+                    <div class="col-sm-8" style="float: left;text-align: left">
+                      <input type="radio" name="disabled" value="0" checked>上架
+                      <input type="radio" name="disabled" value="1">下架
+
+                    </div>
+                  </div>
+                  </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="kzsx">
+
+            </div>
+            <div class="tab-pane fade" id="inf">
+              <div class="row mb10">
+                <div class="col-lg-12" style="text-align:left">
+                  <textarea id="note" name="note" style="width:100%;height:200px;"></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="seo">
+
+              <div class="form-group">
+                <label for="title" class="col-sm-2 control-label">网页标题</label>
+
+                <div class="col-sm-8">
+                  <input type="text" id="title" class="form-control" name="title"
+                         placeholder="title"  value="">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="keywords" class="col-sm-2 control-label">网页关键词</label>
+
+                <div class="col-sm-8">
+                  <input type="text" id="keywords" class="form-control" name="keywords"
+                         placeholder="keywords"  value="">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="description" class="col-sm-2 control-label">网页描述</label>
+
+                <div class="col-sm-8">
+                  <input type="text" id="description" class="form-control" name="description"
+                         placeholder="description"  value="">
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3"></div>
+        <input id="is_spec" name="is_spec" type="hidden" value="false">
+        <input id="specs" name="specs" type="hidden" value="">
+        <input id="images" name="images" type="hidden" value="">
+        <input id="spec_values" name="spec_values" type="hidden" value="[]">
+        <input id="prop_values" name="prop_values" type="hidden" value="[]">
+      </form>
+
+  </div>
+</div>
+<!-- 选择上级 -->
+<div id="dialogSelectParentUnit" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">选择分类</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xs-12">
+            <div id="jsTreeParentUnit" class="demo"></div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="pull-left">
+          <button type="button" class="btn btn-success" data-dismiss="modal" onclick="selectFirstMenu()">不限分类</button>
+        </div>
+        <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+        <button type="button" class="btn btn-primary" onclick="selectParentMenu()">确认选择</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="dialogLv" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">编辑会员价</h4>
+      </div>
+      <div class="modal-body">
+
+ <%lvlist.forEach(function(o){%>
+
+        <div class="row mb10 lvpricecss"  data-lv-id="<%=o.id%>">
+            <div class="form-group">
+              <label for="bn" class="col-sm-3 control-label" style="padding-top: 10px;"><%=o.name%></label>
+              <div class="col-sm-4">
+                <input type="text" class="form-control" style="width: 120px;" placeholder="">
+
+              </div>
+              <div class="col-sm-3" style="padding-top: 10px;">
+                折扣率:<%=o.dis_count%>%
+              </div>
+            </div>
+        </div>
+<%});%>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" onclick="lvpriceSet()">确认</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="specHtml"></div>
+<script language="JavaScript">
+  var imgId=0;
+  function initTreeView() {
+    $("#jsTreeParentUnit").jstree({
+      plugins: ["wholerow", "json_data"],
+      core: {
+        data: {
+          dataType: "json",
+          url: function (node) {
+            return node.id === "#" ? "/private/shop/goods/class/tree" : "/private/shop/goods/class/tree?pid=" + node.id
+          }
+        },
+        multiple: false
+      }
+    }).on("dblclick.jstree", function (node) {
+      selectParentMenu();
+    });
+  }
+  function getProps(id){
+    $.post("/private/shop/goods/goods/getProps/" + id, {}, function (propdata) {
+      if(propdata.code==0){
+        var str='';
+        $.each(propdata.data,function(i,prop){
+          if(prop.type=='select'){
+            str+='<div class="form-group">';
+            str+='<label class="col-sm-2 control-label">'+prop.name+'</label>';
+            str+='<div class="col-sm-8">';
+            str+='<select class="form-control" >';
+            str+='<option value=""></option>';
+            $.each(prop.values,function(j,value){
+              str+='<option value="'+value.name+'">'+value.name+'</option>';
+            });
+            str+='</select>';
+            str+='</div>';
+            str+='</div>';
+          }else {
+            str+='<div class="form-group">';
+            str+='<label class="col-sm-2 control-label">'+prop.name+'</label>';
+            str+='<div class="col-sm-8">';
+            str+='<input class="form-control" />';
+            str+='</div>';
+            str+='</div>';
+          }
+        });
+        $("#kzsx").html(str);
+      }else {
+        $("#kzsx").html('');
+      }
+    }, "json");
+  }
+  //选择父菜单
+  function selectParentMenu() {
+    var tree = $.jstree.reference("#jsTreeParentUnit");
+    var node = tree.get_selected(true);
+    var id=node[0].id;
+    $("#addForm #classid").val(node[0].text);
+    $("#addForm input[name='classid']").val(id);
+    $("#dialogSelectParentUnit").modal("hide");
+    $.post("/private/shop/goods/goods/getClass/" + id, {}, function (data) {
+      if(data.code==0){
+        var type=data.data.typeid;
+        if(type){
+          $("#typeid option[value='"+type.id+"']").attr("selected", true);
+          if(type.use_props){
+            $("#kzsx_tab").show();
+            getProps(type.id);
+          }else{
+            $("#kzsx_tab").hide();
+          }
+          if(type.use_spec){
+            $("#gg").show();
+          }else{
+            $("#gg").hide();
+          }
+        }
+      }else{
+        Toast.error(data.msg);
+      }
+    }, "json");
+  }
+  function selectFirstMenu() {
+    $("#addForm #classid").val("请选择商品分类");
+    $("#addForm input[name='classid']").val("");
+    $("#dialogSelectParentUnit").modal("hide");
+  }
+  function setImg(id){
+    $("#img").find("div").each(function(){
+      $(this).removeClass("divImgD").addClass("divImg");
+    });
+    $("#"+id).removeClass("divImg");
+    $("#"+id).addClass("divImgD");
+  }
+  function delImg(id){
+    $("#"+id).remove();
+  }
+  function getImg(){
+    var imgs=[];
+
+    $("#img").find("div").each(function(){
+      var img={};
+      img.d=false;
+      if($(this).hasClass("divImgD")){
+        img.d=true;
+      }
+      $(this).find("img").each(function(){
+        img.url=$(this).attr("src");
+      });
+      imgs.push(img);
+    });
+    return imgs;
+  }
+  function lvpriceSet(){
+    var lv=[];
+    var self=$("#sp").find("input[type=hidden]");
+    $("#dialogLv").find(".lvpricecss").each(function(){
+      var id=$(this).attr("data-lv-id");
+      var price=$(this).find("input[type=text]").val();
+      if(price!="")
+        lv.push({'lv_id':id,'lv_price':price});
+    });
+    self.val(JSON.stringify(lv));
+    $("#dialogLv").modal("hide");
+  }
+  $(document).ready(function () {
+
+    $("#typeid").on("change",function(){
+      if($(this).val()=='0'){
+        $("#kzsx_tab").hide();
+        $("#gg").hide();
+        $("#kzsx").html('');
+        $("#sp_new").html('').hide();
+        $("#sp").show();
+        $("#is_spec").val("false");
+        $("#specs").val('[]');
+        $("#spec_values").val('[]');
+        $("#prop_values").val('[]');
+
+      }else {
+        $.post("/private/shop/goods/goods/getType/" + $(this).val(), {}, function (data) {
+
+          if(data.code==0){
+            $("#sp_new").html('').hide();
+            $("#sp").show();
+            $("#is_spec").val("false");
+            $("#specs").val('[]');
+            $("#spec_values").val('[]');
+            $("#prop_values").val('[]');
+            if(data.data.use_props){
+                $("#kzsx_tab").show();
+                getProps(data.data.id);
+            }else{
+              $("#kzsx_tab").hide();
+            }
+            if(data.data.use_spec){
+              $("#gg").show();
+            }else{
+              $("#gg").hide();
+            }
+          }else{
+            Toast.error(data.msg);
+          }
+        }, "json");
+      }
+    });
+    $("#specBtn").on("click",function(){
+      if($("#pbn").val()==""){
+        Toast.warning("请填写货号");
+        $("#pbn").focus();
+        return false;
+      }
+      $("#specHtml").load("/private/shop/goods/goods/spec/"+$("#typeid").val(), function (response, status, xhr) {
+        $("#dialogSpec").modal("show");
+      });
+    });
+
+    initTreeView();
+    var container = document.getElementById("img");
+    var sort = Sortable.create(container);
+    var ue = new baidu.editor.ui.Editor();
+    ue.render('note');
+    $('#file_upload').uploadifive({
+      'auto': true,
+      'multi': true,
+      'width': '100%',
+      'height': '35',
+      'buttonText': '请选择图片',
+      'fileType': 'image/*',
+      'fileSizeLimit': 1024,
+      'queueSizeLimit': 6,
+      'formData': {},
+      'queueID': 'queue',
+      'uploadScript': '/open/fileupload/dbimage',
+      'onUploadComplete': function (file, data) {
+        data = JSON.parse(data);
+        if (data.code == 0) {
+          Toast.success(data.msg);
+          imgId++;
+          var c="divImg";
+          if(imgId==1){
+            c="divImgD";
+          }
+          $("#img").append("<div id='imgId"+imgId+"' class='"+c+"'>" +
+            "<img  onclick=\"setImg('imgId"+imgId+"')\" src='" + data.path + "?type=s' style='width:100px;height: 80px;margin-bottom: 1px;'><br>" +
+            "<i style='float: right;padding-top: 4px;' class='fa fa-close' onclick=\"delImg('imgId"+imgId+"')\"></i></div>");
+          sort.destroy();
+          sort = Sortable.create(container);
+        } else {
+          Toast.error(data.msg);
+        }
+      },
+      'onSelect' : function(queue) {
+        if($("#img").children().length>5){
+        Toast.warning("最大允许上传6张图片");
+        $('#file_upload').uploadifive('cancel', $('.uploadifive-queue-item').first().data('file'));
+        }
+      }
+    });
+    $("#save").on("click",function(){
+      if ($("#is_spec").val() == "false") {
+        var specs = [];
+        var self = $("#sp");
+        var spec = "";
+        var gn = self.find("input[name='pbn[]']").val();
+        var disabled = false;
+        var stock = self.find("input[name='stock[]']").val();
+        var buyMin = self.find("input[name='buyMin[]']").val();
+        var buyMax = self.find("input[name='buyMax[]']").val();
+        var price = self.find("input[name='price[]']").val();
+        var lvprice = self.find("input[name='lvprice[]']").val()||[];
+        var priceMarket = self.find("input[name='priceMarket[]']").val();
+        var priceCost = self.find("input[name='priceCost[]']").val();
+        var weight = self.find("input[name='weight[]']").val();
+        var is_default = true;
+        specs.push({
+          'spec': spec,
+          'gn': gn,
+          'disabled': disabled,
+          'stock': stock,
+          'buyMin': buyMin,
+          'buyMax': buyMax,
+          'price': price,
+          'lvprice': JSON.parse(lvprice),
+          'priceMarket': priceMarket,
+          'priceCost': priceCost,
+          'weight': weight,
+          'is_default': is_default
+        });
+        $("#specs").val(JSON.stringify(specs));
+      }
+      var props=[];
+      $("#kzsx").find(".form-group").each(function(){
+        var self=$(this);
+        var obj={};
+        obj.name=self.find("label").text();
+        obj.value=self.find("select").val()||self.find("input").val()||'';
+        props.push(obj);
+      });
+      console.log('props::'+JSON.stringify(props));
+      $("#images").val(JSON.stringify(getImg()));
+      $("#prop_values").val(JSON.stringify(props));
+      $('#addForm').submit();
+    });
+    $('#addForm').ajaxForm({
+      dataType: 'json',
+      beforeSubmit: function (arr, form, options) {
+        form.find("button:submit").button("loading");
+      },
+      success: function (data, statusText, xhr, form) {
+        if (data.code == 0) {
+          $("#addForm").attr("action","/private/shop/goods/goods/editDo");
+          $("#id").val(data.goodsid);
+          Toast.success(data.msg);
+        } else {
+          Toast.error(data.msg);
+        }
+        form.find("button:submit").button("reset");
+      }
+    });
+  });
+</script>

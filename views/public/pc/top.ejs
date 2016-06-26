@@ -1,0 +1,40 @@
+<nav class="primary spread">
+    <div class="container">
+        <ul class="grid middle row">
+            <li class="logo">
+                <a href="/">
+                    Nodeshop <span>v1.4</span>
+                </a>
+            </li>
+            <li class="box">
+                <a href="/framework/">
+                    <%=sails.__({phrase: 'framework', locale:res.locale})%>
+                </a>
+            </li>
+            <li class="box">
+                <a href="/nodeshop/">
+                    <%=sails.__({phrase: 'nodeshop', locale:res.locale})%>
+                </a>
+            </li>
+            <li class="box">
+                <a href="/about/">
+                    <%=sails.__({phrase: 'about', locale:res.locale})%>
+                </a>
+            </li>
+            <li class="box">
+                <a href="http://www.wizzer.cn" target="_blank">
+                    <%=sails.__({phrase: 'blog', locale:res.locale})%>
+                </a>
+            </li>
+            <%if(req.getLocale()=='zh'){%>
+            <a class="flag" href="?lang=en">
+                <img src="<%=CssPath%>/pc/image/en.png">
+            </a>
+            <%}else{%>
+            <a class="flag" href="?lang=zh">
+                <img src="<%=CssPath%>/pc/image/zh.png">
+            </a>
+            <%}%>
+            </ul>
+    </div>
+</nav>

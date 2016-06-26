@@ -1,0 +1,265 @@
+<header class="header navbar bg-white shadow">
+  <div class="btn-group tool-button">
+    <a class="btn btn-primary navbar-btn" href="/private/wx/sales/manage" data-pjax><i class="ti-angle-left"></i> 返回</a>
+  </div>
+</header>
+
+<div class="content-wrap">
+  <div class="wrapper" style="min-height:500px;">
+    <section class="panel panel-form">
+      <form id="addForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+            action="/private/wx/sales/manage/addDo" method="post" >
+        <div class="row mb10">
+          <div class="col-lg-12">
+            <div class="form-group">
+              <label for="title" class="col-sm-2 control-label">公众号</label>
+
+              <div class="col-sm-8">
+                <select name="wxid" class="form-control">
+                  <% if(list){
+                    list.forEach(function(o){
+                  %>
+                  <option value="<%= o.id %>"><%- o.appname %></option>
+                  <%
+                  });
+                  } %>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="appname" class="col-sm-2 control-label">活动类型</label>
+
+              <div class="col-sm-8">
+                <select name="type" class="form-control">
+                  <% if(types){
+                    types.forEach(function(o){
+                  %>
+                  <option value="<%= o.id %>"><%- o.name %></option>
+                  <%
+                  });
+                  } %>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="name" class="col-sm-2 control-label">活动名称</label>
+
+              <div class="col-sm-8">
+                <input type="text" id="name" class="form-control" name="name" data-parsley-required="true"
+                       placeholder="活动名称">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="budget" class="col-sm-2 control-label">活动预算</label>
+
+              <div class="col-sm-8">
+                <input type="text" id="budget" class="form-control" name="budget" data-parsley-required="true"
+                       data-parsley-type="integer"
+                       placeholder="活动预算">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="sendType" class="col-sm-2 control-label">发送方式</label>
+
+              <div class="col-sm-8">
+                <input type="radio" name="sendType" value="0" checked>固定金额<input id="money" name="money" style="width:150px;" type="text" value="" placeholder="每个红包金额" class="form-control">
+                <input type="radio" name="sendType" value="1">随机金额
+                <div>
+                  <input class="form-control" style="width:150px;float: left"  id="moneyMin" name="moneyMin" type="text" disabled placeholder="每个红包最小金额" >
+                  <span style="float: left"> 至 </span>
+                  <input class="form-control" style="width:150px;float: left"  id="moneyMax" name="moneyMax" type="text" disabled placeholder="每个红包最大金额" >
+                </div>              </div>
+            </div>
+            <div class="form-group">
+              <label for="sendType" class="col-sm-2 control-label">活动范围</label>
+
+              <div class="col-sm-8">
+                <input type="radio" name="joinType" value="0" checked>全部用户
+                <input type="radio" name="joinType" value="1">新关注用户
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="time" class="col-sm-2 control-label">活动时间</label>
+
+              <div class="col-sm-8">
+                <div class='col-md-5'>
+                  <div class="form-group">
+                    <div class='input-group date' id='datetimepicker1'>
+                      <input name="startTime" id="startTime" type='text' class="form-control"  data-parsley-required="true"/>
+                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                </span>
+                    </div>
+                  </div>
+                </div>
+                <div class='col-md-5'>
+                  <div class="form-group">
+                    <div class='input-group date' id='datetimepicker2'>
+                      <input name="endTime" id="endTime" type='text' class="form-control"  data-parsley-required="true"/>
+                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span>
+                </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="note" class="col-sm-2 control-label">活动简介</label>
+
+              <div class="col-sm-8">
+                <textarea name="note" id="note" class="form-control col-sm-8" style="height:120px;"></textarea>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="audiourl" class="col-sm-2 control-label">背景音乐</label>
+
+              <div class="col-sm-8">
+                <div id="queue"></div>
+                <div class="input-group">
+                  <input id="file_upload" name="file_upload" type="file" multiple="false">
+                  <span class="input-group-btn">
+                  <button class="btn btn-color current-time" type="button"
+                          onclick="$('#file_upload').uploadifive('upload')">上传<i class="ti-upload ml5"></i>
+                  </button>
+                  </span>
+                </div>
+                <div id="tip" style="padding: 5px;">
+
+                </div>
+                <input type="hidden" id="audiourl" name="audiourl" value="">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="disabled" class="col-sm-2 control-label">是否禁用</label>
+              <div class="col-sm-8 switcha">
+                <div class="mr15">
+                  <input type="checkbox" id="disabled" name="disabled" class="js-switch-blue" >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3"></div>
+        <div class="col-lg-6">
+          <div class="form-group text-center">
+            <label></label>
+
+            <div>
+              <button id="commit" type="button" class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="正在提交...">提 交</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </section>
+
+  </div>
+</div>
+<script language="JavaScript">
+  function clearFile() {
+    $("#tip").html("");
+    $("#audiourl").val("");
+  }
+  function checkMoney(){
+    if('1'==$("input[name=sendType]:checked").val()){
+      if(''==$("#moneyMin").val()){
+        $("#moneyMin").focus();
+        Toast.error('请填写金额');return false;
+      }else if(''==$("#moneyMax").val()){
+        $("#moneyMax").focus();
+        Toast.error('请填写金额');return false;
+      }
+    }else{
+      if(''==$("#money").val()){
+        $("#money").focus();
+        Toast.error('请填写金额');return false;
+      }
+    }
+    return true;
+  }
+  $(document).ready(function () {
+    myForm.init();
+    $("input[name=sendType]").on("change",function(){
+      if('1'==$(this).val()){
+        $("#money").attr("disabled",true);
+        $("#moneyMin").attr("disabled",false);
+        $("#moneyMax").attr("disabled",false);
+      }else{
+        $("#moneyMin").attr("disabled",true);
+        $("#moneyMax").attr("disabled",true);
+        $("#money").attr("disabled",false);
+      }
+    });
+    $('#file_upload').uploadifive({
+      'auto': false,
+      'multi': false,
+      'width': '100%',
+      'height': '35',
+      'buttonText': '请选择MP3',
+      'fileType': 'audio/mp3',
+      'fileSizeLimit': 204800000,
+      'queueSizeLimit': 1,
+      'formData': {},
+      'queueID': 'queue',
+      'uploadScript': '/open/fileupload/file',
+      'onUploadComplete': function (file, data) {
+        data = JSON.parse(data);
+        if (data.code == 0) {
+          Toast.success(data.msg);
+          $("#tip").html("" + data.path + "");
+          $("#audiourl").val(data.path);
+        } else {
+          clearFile();
+          Toast.error(data.msg);
+        }
+      },
+      'onDrop': function (file, fileDropCount) {
+        clearFile();
+      },
+      'onClearQueue': function (queue) {
+        clearFile();
+      },
+      'onCancel': function () {
+        clearFile();
+      }
+    });
+    $('#datetimepicker1').datetimepicker({      language:  'zh-CN',
+      format:'yyyy-mm-dd hh:ii:ss',
+      weekStart: 1,
+      todayBtn:  1,
+      autoclose: 1,
+      todayHighlight: 1,
+      startView: 2,
+      forceParse: 0,
+      showMeridian: 1});
+    $('#datetimepicker2').datetimepicker({      language:  'zh-CN',
+      format:'yyyy-mm-dd hh:ii:ss',
+      weekStart: 1,
+      todayBtn:  1,
+      autoclose: 1,
+      todayHighlight: 1,
+      startView: 2,
+      forceParse: 0,
+      showMeridian: 1});
+    $("#commit").on("click",function(){
+      //ajaxForm 第一次提交失败第二次提交成功的解决办法，就是在提前前赋值x
+      if(checkMoney()){
+        $('#addForm').submit();
+      }
+    });
+    $('#addForm').ajaxForm({
+      dataType: 'json',
+      beforeSubmit: function (arr, form, options) {
+        form.find("button:submit").button("loading");
+      },
+      success: function (data, statusText, xhr, form) {
+        if (data.code == 0) {
+          Toast.success(data.msg);
+          //刷新父级菜单
+          form.resetForm();
+        } else {
+          Toast.error(data.msg);
+        }
+        form.find("button:submit").button("reset");
+      }
+    });
+  });
+</script>

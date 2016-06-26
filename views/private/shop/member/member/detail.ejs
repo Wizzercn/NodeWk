@@ -1,0 +1,33 @@
+<div class="modal-body no-p">
+  <div class="row">
+    <div class="col-xs-12">
+      <section class="panel panel-primary no-b">
+        <header class="panel-heading clearfix brtl brtr">
+          <div class="overflow-hidden">
+            <a href="javascript:;" class="h4 show no-m pt5">会员信息</a>
+          </div>
+        </header>
+        <div class="list-group">
+          <a href="javascript:;" class="list-group-item" title="昵称">
+            <i class="ti-comment mr10 text-muted"></i><%=obj.nickname||''%>
+          </a>
+          <a href="javascript:;" class="list-group-item" title="手机号码">
+            <i class="ti-mobile mr10 text-muted"></i><%=obj.mobile||''%>
+          </a>
+          <a href="javascript:;" class="list-group-item" title="Email">
+            <i class="ti-home mr10 text-muted"></i><%=obj.email||''%>
+          </a>
+          <a href="javascript:;" class="list-group-item" title="固定电话">
+            <i class="ti-tablet mr10 text-muted"></i><%=obj.tel||''%>
+          </a>
+          <a href="javascript:;" class="list-group-item" title="录入时间">
+            <i class="ti-time mr10 text-muted"></i><%=obj.createdAt?moment(obj.createdAt*1000).format("YYYY-MM-DD HH:mm:ss"):''%>
+          </a>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-primary btn-block" data-dismiss="modal">知道了</button>
+</div>

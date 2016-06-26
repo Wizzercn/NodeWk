@@ -1,0 +1,354 @@
+<div id="dialogSpec" class="modal fade" tabindex="-2" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" style="width: 1000px;" >
+    <div class="modal-content" style="width: 1000px;" >
+      <div class="modal-header" >
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">商品规格</h4>
+      </div>
+      <div class="modal-body" style="min-height: 300px;">
+        <div class="row">
+          <div class="col-xs-12" style="float: left" >
+            <% list.forEach(function(o){ %>
+            <div class="spec" style="float: left;padding-right: 10px;" data-spec-name="<%= o.name%>" data-spec-type="<%= o.type%>" data-spec-id="<%= o.id||'' %>">
+              <span class="h5 mb10" style="float: left"><input class="specChkAll" type="checkbox"><strong><%= o.name||'' %>:</strong></span>
+              <div style="float: left;padding-left: 20px;">
+                <% o.values.forEach(function(v){ %>
+                <div class="vl" >
+                <input id="s<%= v.id %>" type="checkbox" value="<%= v.id %>"
+                       title="<%= v.spec_value||'' %>"><%if(v.spec_picurl){%><img src="<%=v.spec_picurl||''%>" style="width: 12px;height: 12px;"><%}%><%= v.spec_value||'' %>
+
+                <a href="javascript:selImg('<%= v.id %>');" style="color: #428bca">选择图片</a>
+                <div id="s_img<%= v.id %>"></div>
+                </div>
+                <% }); %>
+              </div>
+            </div>
+              <% }); %>
+
+          </div>
+          <div class="col-xs-12" style="padding-top: 5px;height: 45px;">
+            <button id="doProduct" type="button" class="btn btn-primary btn-sm">生成所有货品</button>
+          </div>
+          <div style="width: 100%;text-align: center;margin-top: 10px;">
+            <table id="plist" class="table table-bordered table-striped table-condensed" style="width: 95%;margin: 20px;">
+              <thead>
+              <tr>
+                <th>规格值</th>
+                <th>货号</th>
+                <th class="numeric">上架</th>
+                <th class="numeric">库存</th>
+                <th class="numeric">最小购买</th>
+                <th class="numeric">最大购买</th>
+                <th class="numeric">销售价</th>
+                <th class="numeric" style="display: none">成本价</th>
+                <th class="numeric">市场价</th>
+                <th class="numeric">重量(g)</th>
+                <th class="numeric">默认货品</th>
+                <th class="numeric">操作</th>
+              </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+        <button id="dialogSpecOK" type="button" class="btn btn-primary" data-loading-text="保存...">保 存</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="dialogImg" class="modal fade" style="padding-top: 20px;" tabindex="-2" role="dialog" aria-hidden="true">
+  <div class="modal-dialog" style="width: 650px;" >
+    <div class="modal-content" style="width: 650px;" >
+      <div class="modal-header" >
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">选择商品图片</h4>
+      </div>
+      <div class="modal-body" >
+        <div class="row" id="dialogImg_imgs">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+        <button id="specImgDelBtn" type="button" class="btn btn-danger" data-loading-text="删除...">删 除</button>
+
+      </div>
+    </div>
+  </div>
+</div>
+<div id="dialogLvSpec" style="padding-top: 20px;" class="modal fade bs-modal-sm" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">编辑会员价</h4>
+      </div>
+      <div class="modal-body">
+
+        <%lvlist.forEach(function(o){%>
+
+        <div class="row mb10 lvpricecss" data-lv-id="<%=o.id%>">
+          <div class="form-group">
+            <label for="bn" class="col-sm-3 control-label" style="padding-top: 10px;"><%=o.name%></label>
+            <div class="col-sm-4">
+              <input type="text" class="form-control" style="width: 120px;" placeholder="">
+
+            </div>
+            <div class="col-sm-3" style="padding-top: 10px;">
+              默认折扣率:<%=o.dis_count%>%
+            </div>
+          </div>
+        </div>
+        <%});%>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">确认</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script language="JavaScript">
+  function specSelImg(id,url){
+    $("#s_img"+id).html("<img class='specImg' width='50' height='50' src='"+url+"' style='height: 50px;width: 50px;'>");
+    $("#dialogImg").modal("hide");
+  }
+  function specDelImg(id){
+    $("#s_img"+id).html("");
+  }
+  function selImg(id){
+    var imgs=getImg();
+    $("#dialogImg_imgs").html("");
+    $.each(imgs,function(i,o){
+      var str="<div style='margin:2px;float:left;text-align: center;border: 1px solid #dcdcdc;cursor: pointer;' onclick=\"specSelImg("+id+",'"+o.url+"')\" >" +
+        "<img src='" + o.url + "' style='width:100px;height: 80px;margin-bottom: 1px;'></div>";
+      $("#dialogImg_imgs").append(str);
+      $("#specImgDelBtn").unbind("click").on("click",function(){
+        specDelImg(id);
+        $("#dialogImg").modal("hide");
+      });
+    });
+    $("#dialogImg").modal("show");
+  }
+  function getSpec(){
+    var specs=[];
+    $("#dialogSpec").find("div .spec").each(function(){
+      var self=$(this);
+      var spec={};
+      var spec_values=[];
+      spec.spec_name=$(this).attr("data-spec-name");
+      spec.spec_type=$(this).attr("data-spec-type");
+      spec.spec_id=$(this).attr("data-spec-id");
+
+      self.find("div .vl").each(function(){
+        var v={};
+        v.spec_name=spec.spec_name;
+        v.spec_type=spec.spec_type;
+        v.spec_id=spec.spec_id;
+        var chk=false;
+        $(this).find("img[class='specImg']").each(function(){
+          v.spec_value_imgurl=$(this).attr("src");
+        });
+        $(this).find("input[type=checkbox]").each(function(){
+          v.spec_value_id=$(this).val();
+          v.spec_value_name=$(this).attr("title");
+          chk=$(this).prop("checked");
+        });
+        if(chk){
+          spec_values.push(v);
+          spec.spec_values=spec_values;
+        }
+      });
+      if(spec_values.length>0){
+        specs.push(spec);
+      }
+
+    });
+    return specs;
+  }
+  function getProducts(specs) {
+    if (!specs || specs.length == 0) {
+      return [];
+    } else {
+      return joinSpec([[]], specs, 0, specs.length-1);
+    }
+    function joinSpec(prevProducts, specs, i, max) {
+      var currentProducts = [], currentProduct, currentSpecs = specs[i];
+      if ( i > max ) {
+        return prevProducts;
+      }
+      $.each(prevProducts,function(i,prevProduct) {
+        $.each(currentSpecs,function(j,spec) {
+          currentProduct = prevProduct.slice(0);
+          currentProduct.push(spec);
+          currentProducts.push(currentProduct);
+        });
+      });
+      return joinSpec(currentProducts, specs, ++i, max);
+    }
+  }
+  $(document).ready(function () {
+    $(".specChkAll").on("click",function(){
+      if($(this).prop("checked")){
+        $(this).parent().parent().find("input[type=checkbox]").each(function(){
+          $(this).prop("checked",true);
+        });
+      }else {
+        $(this).parent().parent().find("input[type=checkbox]").each(function(){
+          $(this).prop("checked",false);
+        });
+      }
+    });
+    $("#doProduct").on("click",function(){
+      var specs=getSpec();
+      var product_name=[];
+      var spec_values=[];
+      var size=1;
+      $.each(specs,function(i,s){
+        size=size * s.spec_values.length;
+        var t=[];
+        $.each(s.spec_values,function(j,o){
+          t.push(o);
+        });
+        spec_values.push(t);
+      });
+//      console.log('spec_values::'+JSON.stringify(spec_values));
+      $.each(getProducts(spec_values),function(i,v){
+        var n="";
+        $.each(v,function(j,s){
+          n=n+ s.spec_name+":"+ s.spec_value_name;
+          if(j< v.length-1)n+="*";
+        });
+        product_name.push(n);
+      });
+      if(spec_values.length<1){
+        Toast.warning("至少选择一种规格");
+        return false;
+      }
+      //console.log("product_name::"+JSON.stringify(product_name));
+      $("#plist tbody").html("");
+      var i=0;
+      var pbn=$("#pbn").val();
+      var price=$("#price").val();
+      var buyMin=$("#buyMin").val()||'1';
+      var buyMax=$("#buyMax").val()||'100';
+      var priceMarket=$("#priceMarket").val();
+      var priceCost=$("#priceCost").val();
+      var weight=$("#weight").val();
+      $.each(product_name,function(i,name){
+        i++;
+        var str="<tr>";
+        var bn="";
+        if(pbn!=""){
+          bn=pbn+"-"+i;
+        }
+        str+="<td>"+name+"</td>";
+        str+="<td><input name='pbn[]' type='text' class='form-control'  value='"+bn+"' style='height: 22px;width: 80px;padding: 0 2px;'></td>";
+        str+="<td><input name='up[]' type='checkbox' checked></td>";
+        str+="<td><input name='stock[]' type='text' class='form-control' style='height: 22px;width: 60px;padding: 0 2px;'></td>";
+        str+="<td><input name='buyMin[]' value='"+buyMin+"' type='text' class='form-control' style='height: 22px;width: 60px;padding: 0 2px;'></td>";
+        str+="<td><input name='buyMax[]' value='"+buyMax+"' type='text' class='form-control' style='height: 22px;width: 60px;padding: 0 2px;'></td>";
+        str+="<td style='text-align: left;width: 150px;'><div style='float: left'><input name='price[]' type='text' value='"+price+"' class='form-control' style='height: 22px;width: 60px;padding: 0 2px;'></div><div style='float: left'>" +
+          "<input name='lvprice[]' type='hidden' value='[]'><a class='member' href='javascript:;' style='color: #428bca'>会员价</a></div></td>";
+        str+="<td><input name='priceMarket[]' value='"+priceMarket+"' type='text' class='form-control' style='height: 22px;width: 60px;padding: 0 2px;'></td>";
+        str+="<td style='display: none'><input name='priceCost[]' value='"+priceCost+"' type='text' class='form-control' style='height: 22px;width: 60px;padding: 0 2px;'></td>";
+        str+="<td><input name='weight[]' value='"+weight+"' type='text' class='form-control' style='height: 22px;width: 60px;padding: 0 2px;'></td>";
+        str+="<td><input name='is_default[]' type='checkbox'></td>";
+        str+="<td><a class='delSpec' href='javascript:;' style='color: #428bca'>删除</a></td>";
+        $("#plist tbody").append(str);
+      });
+      $("#plist .delSpec").on("click",function(){
+        $(this).parent().parent().remove();
+      });
+      $("#plist .member").on("click",function(){
+        var self=$(this).parent().find("input[type=hidden]");
+        var lvprice=self.val();
+        if(lvprice!=""&&lvprice!="[]"){
+          var lvp=JSON.parse(lvprice);
+          $.each(lvp,function(i,lv){
+            var j=0;
+            $("#dialogLvSpec").find("input[type=text]").each(function(){
+              if(i==j)$(this).val(lv.lv_price);
+              j++;
+            });
+          });
+        }else {
+          $("#dialogLvSpec").find("input[type=text]").each(function(){
+            $(this).val("");
+          });
+        }
+        $("#dialogLvSpec button[type=button]").unbind("click").on("click",function(){
+          var lv=[];
+          $("#dialogLvSpec").find(".lvpricecss").each(function(){
+            var id=$(this).attr("data-lv-id");
+            var price=$(this).find("input[type=text]").val();
+            if(price!="")
+            lv.push({'lv_id':id,'lv_price':price});
+          });
+          self.val(JSON.stringify(lv));
+        });
+        $("#dialogLvSpec").modal("show");
+      });
+    });
+    $("#dialogSpecOK").on("click",function(){
+      var is_default=0;
+      $("#plist tbody").find("input[name='is_default[]']").each(function(){
+        if($(this).prop("checked"))is_default++;
+      });
+      if(is_default==1){
+        var specs=getSpec();
+        var spec_values=[];
+        var size=1;
+        $.each(specs,function(i,s){
+          size=size * s.spec_values.length;
+          var t=[];
+          $.each(s.spec_values,function(j,o){
+            t.push(o);
+          });
+          spec_values.push(t);
+        });
+        $("#spec_values").val(JSON.stringify(spec_values));
+        var specs=[];
+        var specs_name="";
+        $("#plist tbody").find("tr").each(function(){
+          var self=$(this);
+          var spec=self.find("td:first").text();
+          specs_name+=spec+"|";
+          var gn=self.find("input[name='pbn[]']").val();
+          var disabled=self.find("input[name='up[]']").prop("checked")==false;
+          var stock=self.find("input[name='stock[]']").val();
+          var buyMin=self.find("input[name='buyMin[]']").val();
+          var buyMax=self.find("input[name='buyMax[]']").val();
+          var price=self.find("input[name='price[]']").val();
+          var lvprice=self.find("input[name='lvprice[]']").val();
+          var priceMarket=self.find("input[name='priceMarket[]']").val();
+          var priceCost=self.find("input[name='priceCost[]']").val();
+          var weight=self.find("input[name='weight[]']").val();
+          var is_default=self.find("input[name='is_default[]']").prop("checked")==true;
+          specs.push({'spec':spec,'gn':gn,'disabled':disabled,'stock':stock,'buyMin':buyMin,'buyMax':buyMax,'price':price,
+          'lvprice':JSON.parse(lvprice),'priceMarket':priceMarket,'priceCost':priceCost,'weight':weight,'is_default':is_default});
+        });
+        $("#is_spec").val("true");
+        $("#specs").val(JSON.stringify(specs));
+        $("#sp").hide();
+        $("#sp_new").html('<div class="form-group" id="gg_new">'+
+        '<label for="gg_new" class="col-sm-2 control-label">规格</label>'+
+          '<div class="col-sm-8">'+
+          '<button id="specEditBtn" class="btn btn-primary" style="float: left;" type="button">编辑规格</button>'+
+           '<div style="float: left;text-align: left;">已设置'+specs.length+'个规格货品['+ specs_name+']</div>'+
+          '</div>'+
+          '</div>').show();
+        $("#specEditBtn").unbind("click").on("click",function(){
+          $("#dialogSpec").modal("show");
+        });
+        $("#dialogSpec").modal("hide");
+      }else {
+        Toast.warning("请选择一个货品为默认货品");
+        return false;
+      }
+    });
+  });
+</script>

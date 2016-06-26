@@ -1,0 +1,184 @@
+<header class="header navbar bg-white shadow">
+  <div class="btn-group tool-button">
+    <a class="btn btn-primary navbar-btn" data-toggle="modal" data-target="#dialogDetail"><i class="ti-plus"></i> 新建备份</a>
+  </div>
+</header>
+<div class=panel-body style="padding-top: 50px;">
+  <div class="table-responsive no-border">
+    <table class="table table-bordered table-striped mg-t datatable">
+      <thead>
+      <tr>
+        <th>备份类型</th>
+        <th>文件名称</th>
+        <th>备份时间</th>
+        <th>操作</th>
+    </table>
+  </div>
+</div>
+<div id="dialogDelete" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">删除</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xs-12">
+            删除后无法恢复，确定删除吗？ <br/>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+        <button id="ok" type="button" class="btn btn-primary" data-loading-text="正在删除...">确 定</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="dialogDetail" class="modal fade bs-modal" tabindex="-3" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body no-p">
+        <div class="row">
+          <div class="col-xs-12">
+            <section class="panel panel-primary no-b">
+              <header class="panel-heading clearfix brtl brtr">
+                <div class="overflow-hidden">
+                  <a href="javascript:;" class="h4 show no-m pt5">新建备份</a>
+                </div>
+              </header>
+              <div class="row mb10" style="text-align: center;padding-top: 10px;">
+                <table width="80%" style="padding: 10px;">
+                  <tr style="height: 30px;">
+                    <td width="30%" align="right">备份类型：</td>
+                    <td width="70%" align="left">
+                      <select id="type" class="control-group">
+                        <option value="db">数据库备份(MySQL)</option>
+                        <!--<option value="file">文件备份</option>-->
+                      </select>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+              <div style="width: 400px;margin-left: 100px;" class="alert alert-warning alert-dismissable">
+                <strong>注意：</strong>&nbsp;备份成功后，请将备份文件下载到本地保存！
+              </div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+        <button onclick="doBackup()" id="okBackup" type="button" class="btn btn-primary" data-loading-text="正在备份...">确 定</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script language="JavaScript">
+  var datatable;
+  function initDatatable() {
+    datatable = $('.datatable').DataTable({
+      "dom": '<"toolbar">frtip',
+      "searching": false,
+      "processing": false,
+      "serverSide": true,
+      "select": true,
+      "ordering": true,
+      "language": {
+        "url": "/plugins/datatables/cn.json"
+      },
+      "preDrawCallback": function () {
+        sublime.showLoadingbar($(".main-content"));
+      },
+      "drawCallback": function () {
+        sublime.closeLoadingbar($(".main-content"));
+      },
+      "ajax": {
+        "url": "/private/sys/backup/data",
+        "type": "post",
+        "data": function (d) {
+        }
+      },
+      "order": [[2, "desc"]],
+      "columns": [
+        {"data": "type", "bSortable": true},
+        {"data": "name", "bSortable": true},
+        {"data": "createdAt", "bSortable": true}
+      ],
+      "columnDefs": [
+        {
+          "render": function (data, type, row) {
+            if(data=='db'){
+              return '数据库备份';
+            }
+            return '文件备份';
+          },
+          "targets": 0
+        },
+        {
+          "render": function (data, type, row) {
+              return '<a href="/private/sys/backup/down/'+data+'" target="_blank" style="color: #3367ac;">'+data+'</a>';
+          },
+          "targets": 1
+        },
+        {
+          "render": function (data, type, row) {
+            return new Date(data*1000).Format("yyyy-MM-dd hh:mm:ss");
+          },
+          "targets": 2
+        },
+        {
+          "render": function (data, type, row) {
+            return '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">' +
+              ' <i class="ti-settings"></i> <span class="ti-angle-down"></span></button><ul class="dropdown-menu" role="menu">' +
+              '<li><a href="javascript:;" onclick="del(' + row.id + ')">删除</a></li>' +
+              '</ul></div>';
+          },
+          "targets": 3
+        }
+      ]
+    });
+    datatable.on('click', 'tr', function () {
+      $(this).toggleClass('selected');
+    });
+  }
+  function doBackup(){
+    var btn = $("#okBackup");
+    var dialog = $("#dialogDetail");
+    btn.button("loading");
+    $.post("/private/sys/backup/bak", {type:$("#type").val()}, function (data) {
+      if (data.code == 0) {
+        Toast.success("备份成功");
+        dialog.modal("hide");
+        datatable.ajax.reload();
+      } else {
+        Toast.error(data.msg);
+      }
+      btn.button("reset");
+    }, "json");
+  }
+  function del(id) {
+    var dialog = $("#dialogDelete");
+    dialog.modal("show");
+    dialog.find("#ok").unbind("click");
+    dialog.find("#ok").bind("click", function (event) {
+      var btn = $(this);
+      btn.button("loading");
+      $.post("/private/sys/backup/delete/" + id, {}, function (data) {
+        if (data.code == 0) {
+          datatable.ajax.reload(null,false);
+        } else {
+          Toast.error(data.msg);
+        }
+        //重置按钮状态，关闭提示框
+        btn.button("reset");
+        dialog.modal("hide");
+      }, "json");
+    });
+  }
+  $(function () {
+    initDatatable();
+  });
+</script>

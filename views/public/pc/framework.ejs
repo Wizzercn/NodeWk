@@ -1,0 +1,43 @@
+<%include top.ejs%>
+<section class="container team">
+    <article class="grid member">
+        <aside class="thirty box" style="background-image:url(<%=CssPath%>/pc/image/1.png)">
+            <h2><%-sails.__({phrase: 'desktop', locale:res.locale})%></h2>
+        </aside>
+
+        <div class="box biography">
+            <p>
+                <%-sails.__({phrase: 'framework_note', locale:res.locale})%>
+            </p>
+
+            <ul class="grid social row">
+                <li class="box twitter">
+                    <a href="/sysadmin" target="_blank">
+                        <%-sails.__({phrase: 'framework_url', locale:res.locale})%>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </article>
+
+    <article class="grid member">
+        <aside class="thirty box" style="background-image:url(<%=CssPath%>/pc/image/2.png)">
+            <h2><%-sails.__({phrase: 'code', locale:res.locale})%></h2>
+        </aside>
+
+        <div class="box biography">
+            <p>
+                <%-sails.__({phrase: 'code_note', locale:res.locale})%>
+            </p>
+
+            <ul class="grid social row">
+                <li class="box github">
+                    <a href="https://github.com/Wizzercn" target="_blank">
+                        Github
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </article>
+</section>
+<%include buttom.ejs%>

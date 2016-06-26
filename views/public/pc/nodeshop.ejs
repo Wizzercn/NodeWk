@@ -1,0 +1,32 @@
+<%include top.ejs%>
+<section class="container team">
+    <article class="grid member">
+        <div class="box biography">
+            <p>
+                <%-sails.__({phrase: 'shop_1_note', locale:res.locale})%>
+            </p>
+
+            <ul class="grid social row">
+                <li class="box twitter">
+                    <a href="http://demo.sunshop.cn" target="_blank">
+                        <%-sails.__({phrase: 'demo', locale:res.locale})%>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </article>
+
+    <article class="grid member">
+        <div><img src="<%=CssPath%>/pc/image/demo1.png"></div>
+    </article>
+    <article class="grid member">
+        <div><img src="<%=CssPath%>/pc/image/demo2.png"></div>
+    </article>
+    <article class="grid member">
+        <div><img src="<%=CssPath%>/pc/image/demo3.png"></div>
+    </article>
+    <article class="grid member">
+        <div><img src="<%=CssPath%>/pc/image/demo4.png"></div>
+    </article>
+</section>
+<%include buttom.ejs%>

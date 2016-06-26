@@ -1,0 +1,194 @@
+<header class="header navbar bg-white shadow">
+  <div class="btn-group" style="padding-top: 15px;">
+  <div class="btn-group tool-button" style="padding-right: 5px;">
+    <%if(list){%>
+    <select id="sales">
+      <%list.forEach(function(obj){%>
+      <option value="<%=obj.id%>"><%=obj.name%></option>
+      <%});%>
+    </select>
+   <%}%>
+    是否关注：
+    <select id="subscribe">
+      <option value="">全部</option>
+      <option value="1" selected>已关注</option>
+      <option value="0">未关注</option>
+    </select>
+  </div>
+  <div id="res" class="btn-group tool-button"></div>
+  </div>
+  <div class="pull-right">
+    <button class="btn btn-primary navbar-btn" onclick="sublime.toggleFilter('.cd-panel')"><i
+        class="fa fa-sliders"></i> 筛选
+    </button>
+  </div>
+</header>
+<div class=panel-body style="padding-top: 50px;">
+  <div class="table-responsive no-border">
+    <input id="unitid" type="hidden">
+    <table class="table table-bordered table-striped mg-t datatable">
+      <thead>
+      <tr>
+        <th>微信昵称</th>
+        <th>参与名称</th>
+        <th>是否关注</th>
+        <th>是否分享</th>
+        <th>参与时间</th>
+        <th>红包金额</th>
+        <th>红包状态</th>
+        <th>使用时间</th>
+        <th>操作</th>
+    </table>
+  </div>
+</div>
+<div class="cd-panel from-right">
+  <header class="cd-panel-header">
+    <h4>高级筛选</h4>
+  </header>
+  <div class="cd-panel-container">
+    <div class="cd-panel-content shadow">
+      <div class="form-group">
+        <label for="nickname">昵称</label>
+        <input type="text" id="nickname" name="nickname" onclick="this.value=''" class="form-control" placeholder="昵称">
+      </div>
+      <button id="searchBtn" type="button" class="btn btn-default">查询</button>
+    </div>
+  </div>
+</div>
+<script language="JavaScript">
+  var datatable;
+  function initDatatable() {
+    datatable = $('.datatable').DataTable({
+      "dom": '<"toolbar">frtip',
+      "searching": false,
+      "processing": false,
+      "serverSide": true,
+      "select": true,
+      "ordering": true,
+      "language": {
+        "url": "/plugins/datatables/cn.json"
+      },
+      "preDrawCallback": function () {
+        sublime.showLoadingbar($(".main-content"));
+      },
+      "drawCallback": function () {
+        sublime.closeLoadingbar($(".main-content"));
+      },
+      "ajax": {
+        "url": "/private/wx/sales/result/data",
+        "type": "post",
+        "data": function (d) {
+          d.salesid=$("#sales").val();
+          d.substatus=$("#subscribe").val();
+          d.nickname = $('#nickname').val();
+        }
+      },
+      "order": [[4, "desc"]],
+      "columns": [
+        {"data": "nickname", "bSortable": true},
+        {"data": "name", "bSortable": true},
+        {"data": "subscribe", "bSortable": true},
+        {"data": "share", "bSortable": true},
+        {"data": "createdAt", "bSortable": true},
+        {"data": "money", "bSortable": true},
+        {"data": "status", "bSortable": true},
+        {"data": "usedAt", "bSortable": false}
+      ],
+      "columnDefs": [
+        {
+          "render": function (data, type, row) {
+            if(data==1){
+              return '已关注';
+            }
+            return '';
+          },
+          "targets": 2
+        },
+        {
+          "render": function (data, type, row) {
+            if(data==1){
+              return '已分享';
+            }
+            return '';
+          },
+          "targets": 3
+        },
+        {
+          "render": function (data, type, row) {
+            if (data) {
+              return new Date(parseInt(data*1000)).format("yyyy-MM-dd hh:mm:ss"); ;
+            }
+            return '';
+          },
+          "targets": 4
+        },
+        {
+          "render": function (data, type, row) {
+            if(data==1){
+              return '<span style="color: red">已使用</span>';
+            }
+            return '<span style="color: green">未使用</span>';
+          },
+          "targets": 6
+        },
+        {
+          "render": function (data, type, row) {
+            if (data) {
+              return new Date(parseInt(data*1000)).format("yyyy-MM-dd hh:mm:ss"); ;
+            }
+            return '';
+          },
+          "targets": 7
+        },
+        {
+          "render": function (data, type, row) {
+            if(row.subscribe==1&&row.status==0){
+              return '<div class="btn-group"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">' +
+                ' <i class="ti-settings"></i> <span class="ti-angle-down"></span></button><ul class="dropdown-menu" role="menu">' +
+                '<li><a href="javascript:;" onclick="disableIt(' + row.id + ')">使用</a></li>' +
+                '</ul></div>';
+            }
+            return '';
+          },
+          "targets": 8
+        }
+      ]
+    });
+    datatable.on('click', 'tr', function () {
+      $(this).toggleClass('selected');
+    });
+    $("#sales").on("change",function(){
+      $.post("/private/wx/sales/result/count/" + $("#sales").val(), {}, function (data) {
+        $("#res").html("活动浏览量："+data.allip+" 参与人数："+data.alluser+" （其中："+data.allshare+"人分享活动，"+data.subscribe+"人关注公众号）");
+        datatable.ajax.reload();
+      }, "json");
+    });
+    $("#subscribe").on("change",function(){
+      $.post("/private/wx/sales/result/count/" + $("#sales").val(), {}, function (data) {
+        $("#res").html("活动浏览量："+data.allip+" 参与人数："+data.alluser+" （其中："+data.allshare+"人分享活动，"+data.subscribe+"人关注公众号）");
+        datatable.ajax.reload();
+      }, "json");
+    });
+    $("#searchBtn").on('click', function () {
+      datatable.ajax.reload();
+    });
+  }
+  function disableIt(id) {
+    $.post("/private/wx/sales/result/disable/" + id, {}, function (data) {
+      if (data.code == 0) {
+        datatable.ajax.reload();
+      } else {
+        Toast.error(data.msg);
+      }
+    }, "json");
+  }
+  function initData(){
+    $.post("/private/wx/sales/result/count/" + $("#sales").val(), {}, function (data) {
+      $("#res").html("活动浏览量："+data.allip+" 参与人数："+data.alluser+" （其中："+data.allshare+"人分享活动，"+data.subscribe+"人关注公众号）");
+      initDatatable();
+    }, "json");
+  }
+  $(function () {
+    initData();
+  });
+</script>

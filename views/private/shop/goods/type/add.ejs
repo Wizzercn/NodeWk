@@ -1,0 +1,364 @@
+<header class="header navbar bg-white shadow">
+  <div class="btn-group tool-button">
+    <a class="btn btn-primary navbar-btn" href="/private/shop/goods/type" id="goback" data-pjax><i class="ti-angle-left"></i> 返回</a>
+  </div>
+  <div class="pull-right">
+    <div class="btn-group tool-button">
+      <button class="btn btn-primary navbar-btn" type="button" id="save"> 保存</button>
+    </div>
+  </div>
+</header>
+
+<div class="content-wrap">
+  <form id="addForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+        action="/private/shop/goods/type/addDo" method="post">
+    <input type="hidden" id="is_physical" name="is_physical" value="<%=is_physical%>">
+    <input type="hidden" id="use_props" name="use_props" value="<%=use_props%>">
+    <input type="hidden" id="use_params" name="use_params" value="<%=use_params%>">
+    <input type="hidden" id="use_spec" name="use_spec" value="<%=use_spec%>">
+    <input type="hidden" id="use_tabs" name="use_tabs" value="<%=use_tabs%>">
+  <div class="wrapper" style="min-height:500px;">
+    <div class="box-tab">
+      <ul class="nav nav-tabs">
+        <li class="active"><a href="#base" data-toggle="tab">基本设置</a>
+        </li>
+        <%if('1'==use_props){%>
+        <li><a href="#props" data-toggle="tab">扩展属性</a>
+        </li>
+        <%}%>
+        <%if('1'==use_spec){%>
+        <li><a href="#spec" data-toggle="tab">规格</a>
+        </li>
+        <%}%>
+        <%if('1'==use_params){%>
+        <li><a href="#params" data-toggle="tab">详细参数表</a>
+        </li>
+        <%}%>
+        <%if('1'==use_tabs){%>
+        <li><a href="#mytab" data-toggle="tab">自定义tab</a>
+        </li>
+        <%}%>
+      </ul>
+      <div class="tab-content text-center">
+        <div class="tab-pane fade active in" id="base">
+          <div class="col-lg-12">
+            <div class="form-group">
+              <label for="name" class="col-sm-2 control-label">类型名称</label>
+              <div class="col-sm-8">
+                <input type="text" id="name" class="form-control" name="name" data-parsley-required="true"
+                       value="" placeholder="类型名称">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="alias" class="col-sm-2 control-label">类型别名</label>
+
+              <div class="col-sm-8">
+                <input type="text" id="alias" class="form-control" name="alias"
+                       value="" placeholder="类型别名">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="props">
+          <div class="form-group">
+            <div class="col-sm-2">
+              <button id="propsAdd" type="button" class="btn btn-default"><i class="fa fa-plus mr5"></i>添加扩展属性</button>
+
+            </div>
+            <div class="col-sm-8">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="propsTab" class="col-sm-2 control-label"></label>
+            <div class="col-sm-8">
+              <table id="propsTab" width="100%" border="0" cellspacing="0" cellpadding="0" >
+                <thead>
+                <tr align="center">
+                  <td>属性名称</td>
+                  <td width="2"></td>
+                  <td>展现形式</td>
+                  <td width="2"></td>
+                  <td>选项管理</td>
+                  <td></td>
+                  <td>操作</td>
+                </tr>
+                </thead>
+                <TBODY>                  　
+                　
+                </TBODY>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="spec">
+          <div class="form-group">
+            <div class="col-sm-2">
+              <button id="specAdd" type="button" class="btn btn-default"><i class="fa fa-plus mr5"></i>选择规格</button>
+
+            </div>
+            <div class="col-sm-8">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="specTab" class="col-sm-2 control-label"></label>
+            <div class="col-sm-8">
+              <table id="specTab" width="100%" border="0" cellspacing="0" cellpadding="0" >
+                <thead>
+                <tr align="center">
+                  <td>规格名称</td>
+                  <td width="2"></td>
+                  <td>操作</td>
+                </tr>
+                </thead>
+                <TBODY>                  　
+                　
+                </TBODY>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="params">
+          <h1 class="text-muted bolder">4</h1>
+        </div>
+        <div class="tab-pane fade" id="mytab">
+          <h1 class="text-muted bolder">5</h1>
+        </div>
+      </div>
+    </div>
+  </div>
+    </form>
+</div>
+<div id="buttom"></div>
+<div id="dialogProps" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">编辑选项</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="form-group">
+            <div class="col-sm-2">
+              <button id="dialogPropsAdd" type="button" class="btn btn-default"><i class="fa fa-plus mr5"></i>添加选项值</button>
+            </div>
+            <div class="col-sm-8">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group">
+            <label for="dialogPropsTab" class="col-sm-2 control-label"></label>
+            <div class="col-sm-8">
+              <table id="dialogPropsTab" width="100%" border="0" cellspacing="0" cellpadding="0" >
+                <thead>
+                <tr align="center">
+                  <td>选项值</td>
+                  <td width="2"></td>
+                  <td>操作</td>
+                </tr>
+                </thead>
+                <TBODY>                  　
+                　
+                </TBODY>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+        <button id="dialogPropsOK" type="button" class="btn btn-primary" data-loading-text="确定...">确 定</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script language="JavaScript">
+  function binPropsEvent(){
+    $("#propsTab .up").unbind("click").on("click",function(){
+      var p=$(this).parent().parent();
+      var nextTR = p.prev();
+      if (nextTR.length > 0) {
+        nextTR.insertAfter(p);
+      }
+    });
+    $("#propsTab .down").unbind("click").on("click",function(){
+      var p=$(this).parent().parent();
+      var nextTR = p.next();
+      if (nextTR.length > 0) {
+        nextTR.insertBefore(p);
+      }
+    });
+    $("#propsTab .del").unbind("click").on("click",function(){
+      var tr=$("#propsTab tbody").find("tr");
+      if (tr.length > 0) {
+        $(this).parent().parent().remove();
+      }
+    });
+    $("#propsTab select").unbind("change").on("change",function(){
+      if("input"==$(this).val()){
+        $(this).parent().parent().find("button").hide();
+        $(this).parent().parent().find("input[name='props_values[]']").hide();
+        $(this).parent().parent().find("input[name='props_values[]']").val("");
+      }else{
+        $(this).parent().parent().find("button").show();
+        $(this).parent().parent().find("input[name='props_values[]']").show();
+      }
+    });
+    $("#propsTab .btn").unbind("click").on("click",function(){
+      $("#dialogPropsTab tbody").html("");
+      var btn=$(this);
+      var vs=$(this).parent().parent().find("input[name='props_values[]']").val();
+      if(vs!=""&&vs.indexOf(",")>0){
+        var vss=vs.split(",");
+        for(var i=0;i<vss.length-1;i++){
+          $("#dialogPropsTab tbody").append('<tr align="center"><td height="45">' +
+            '<input type="text" class="form-control" value="'+vss[i]+'"></td>' +
+            '<td width="2"></td>' +
+            '<td><i class="up fa fa-arrow-up" style="cursor:pointer;padding: 5px;" title="向上移动"></i>' +
+            '<i class="down fa fa-arrow-down" style="cursor:pointer;padding: 5px;" title="向下移动"></i>' +
+            '<i class="del fa fa-remove" style="cursor:pointer;padding: 5px;" title="删除"></i></td></tr>');
+        }
+        binDialogPropsEvent();
+      }
+      $("#dialogProps").modal("show");
+      $("#dialogPropsOK").unbind("click").on("click",function(){
+        var str="";var ok=true;
+        $("#dialogPropsTab").find("input").each(function(){
+          if(""==$(this).val()){
+            ok=false;
+            $(this).focus();
+            return false;
+          }else{
+            str+=$(this).val()+",";
+          }
+        });
+        if(ok){
+          btn.parent().parent().find("input[name='props_values[]']").val(str);
+          $("#dialogProps").modal("hide");
+          $("#dialogPropsTab tbody").html("");
+        }
+      });
+    });
+  }
+  function binDialogPropsEvent(){
+    $("#dialogPropsTab .up").unbind("click").on("click",function(){
+      var p=$(this).parent().parent();
+      var nextTR = p.prev();
+      if (nextTR.length > 0) {
+        nextTR.insertAfter(p);
+      }
+    });
+    $("#dialogPropsTab .down").unbind("click").on("click",function(){
+      var p=$(this).parent().parent();
+      var nextTR = p.next();
+      if (nextTR.length > 0) {
+        nextTR.insertBefore(p);
+      }
+    });
+    $("#dialogPropsTab .del").unbind("click").on("click",function(){
+      var tr=$("#propsTab tbody").find("tr");
+      if (tr.length > 0) {
+        $(this).parent().parent().remove();
+      }
+    });
+  }
+  function binSpecEvent(){
+    $("#specTab .up").unbind("click").on("click",function(){
+      var p=$(this).parent().parent();
+      var nextTR = p.prev();
+      if (nextTR.length > 0) {
+        nextTR.insertAfter(p);
+      }
+    });
+    $("#specTab .down").unbind("click").on("click",function(){
+      var p=$(this).parent().parent();
+      var nextTR = p.next();
+      if (nextTR.length > 0) {
+        nextTR.insertBefore(p);
+      }
+    });
+    $("#specTab .del").unbind("click").on("click",function(){
+      var tr=$("#specTab tbody").find("tr");
+      if (tr.length > 0) {
+        $(this).parent().parent().remove();
+      }
+    });
+  }
+  $(document).ready(function () {
+    $("#propsAdd").on("click",function(){
+      $("#propsTab tbody").append('<tr align="center"><td height="45">' +
+        '<input type="text" name="props_name[]" class="form-control" data-parsley-required="true"></td>' +
+        '<td width="2"></td>' +
+        '<td><select name="props_type[]" class="form-control"><option value="select">下拉框</option><option value="input">文本输入框</option></select> ' +
+        '<td width="2"></td><td><button type="button" class="btn btn-default"><i class="fa fa-plus mr5"></i>管理选项</button></td>'+
+        '<td><input type="text" name="props_values[]" class="form-control" style="width: 80px;" readonly></td>'+
+        '<td><i class="up fa fa-arrow-up" style="cursor:pointer;padding: 5px;" title="向上移动"></i>' +
+        '<i class="down fa fa-arrow-down" style="cursor:pointer;padding: 5px;" title="向下移动"></i>' +
+        '<i class="del fa fa-remove" style="cursor:pointer;padding: 5px;" title="删除"></i></td></tr>');
+      binPropsEvent();
+    });
+    $("#dialogPropsAdd").on("click",function(){
+      $("#dialogPropsTab tbody").append('<tr align="center"><td height="45">' +
+        '<input type="text" class="form-control"></td>' +
+        '<td width="2"></td>' +
+        '<td><i class="up fa fa-arrow-up" style="cursor:pointer;padding: 5px;" title="向上移动"></i>' +
+        '<i class="down fa fa-arrow-down" style="cursor:pointer;padding: 5px;" title="向下移动"></i>' +
+        '<i class="del fa fa-remove" style="cursor:pointer;padding: 5px;" title="删除"></i></td></tr>');
+      binDialogPropsEvent();
+    });
+    $("#specAdd").on("click",function(){
+      $("#buttom").load( "/private/shop/goods/type/spec", function( response, status, xhr ) {
+        $("#dialogSpecOK").on("click",function(){
+          var spec=$("#dialogSpec input[type=radio]:checked").val();
+          var text=$("#dialogSpec input[type=radio]:checked + span").text();
+          if(spec){
+            var ok=true;
+            $("#specTab").find("input[name='specId[]']").each(function(){
+              if(spec==$(this).val()){
+                Toast.warning("规格已存在");
+                ok=false;
+              }
+            });
+            if(ok){
+              $("#specTab tbody").append('<tr align="center"><td height="45">' +
+              '<input type="hidden" name="specId[]" class="form-control" value="'+spec+'"><div class="specName">'+text+'</div></td>' +
+              '<td width="2"></td>' +
+              '<td><i class="up fa fa-arrow-up" style="cursor:pointer;padding: 5px;" title="向上移动"></i>' +
+              '<i class="down fa fa-arrow-down" style="cursor:pointer;padding: 5px;" title="向下移动"></i>' +
+              '<i class="del fa fa-remove" style="cursor:pointer;padding: 5px;" title="删除"></i></td></tr>');
+              binSpecEvent();
+              $("#dialogSpec").modal("hide");
+            }
+          }else{
+            Toast.warning("请选择一个规格");
+          }
+        });
+        $("#dialogSpec").modal("show");
+      });
+    });
+    $('#addForm').ajaxForm({
+      dataType: 'json',
+      beforeSubmit: function (arr, form, options) {
+        form.find("button:submit").button("loading");
+      },
+      success: function (data, statusText, xhr, form) {
+        if (data.code == 0) {
+          Toast.success(data.msg);
+          //刷新父级菜单
+          form.resetForm();
+          setTimeout(function () {
+            $("#goback").trigger("click");
+          }, 1000);
+        } else {
+          Toast.error(data.msg);
+        }
+        form.find("button:submit").button("reset");
+      }
+    });
+    $("#save").on("click",function(){
+      $('#addForm').submit();
+    });
+
+  });
+</script>

@@ -1,0 +1,64 @@
+<div class="modal-body no-p">
+  <div class="row">
+    <div class="col-xs-12">
+      <section class="panel panel-primary no-b">
+        <header class="panel-heading clearfix brtl brtr">
+          <div class="overflow-hidden">
+            <a href="javascript:;" class="h4 show no-m pt5">定时任务</a>
+          </div>
+        </header>
+        <div class="list-group" style="text-align: center;padding-top: 10px;">
+          <table width="80%" style="padding: 10px;">
+            <tr style="height: 30px;">
+              <td width="30%" align="right">实例名：</td>
+              <td width="70%" align="left">
+                <%=obj.name||''%>
+              </td>
+            </tr>
+            <tr style="height: 40px;">
+              <td width="30%" align="right">任务名称：</td>
+              <td width="70%" align="left">
+                <input name="note" id="note" maxlength="50" class="form-control" value="<%=obj.note||''%>"/>
+              </td>
+            </tr>
+            <tr style="height: 40px;">
+              <td width="30%" align="right">定时策略(cron)：</td>
+              <td width="70%" align="left">
+                <input name="cron" id="cron" maxlength="20" class="form-control"  value="<%=obj.cron||''%>"/>
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div style="width: 400px;margin-left: 100px;" class="alert alert-warning alert-dismissable">
+          <strong>Cron示例：</strong>前后不要有空格<br>
+          &nbsp;10 2 * * *  每天2点10分<br>
+          &nbsp;*/1 * * * *  每隔1分钟<br>
+          &nbsp;0 */2 * * *  每两个小时<br>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+  <button onclick="save()" id="save" type="button" class="btn btn-primary" data-loading-text="正在提交...">确 定</button>
+</div>
+<script type="text/javascript">
+  function save(){
+    var btn = $("#save");
+    var dialog = $("#dialogDetail");
+    btn.button("loading");
+    $.post("/private/sys/job/editDo", {id: <%=obj.id%>,note:$("#note").val(),cron:$("#cron").val()}, function (data) {
+      if (data.code == 0) {
+        Toast.success("提交成功");
+        dialog.modal("hide");
+        datatable.ajax.reload();
+      } else {
+        Toast.error(data.msg);
+      }
+      btn.button("reset");
+
+    }, "json");
+  }
+</script>

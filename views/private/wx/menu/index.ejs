@@ -1,0 +1,161 @@
+<header class="header navbar bg-white shadow">
+  <div class="btn-group tool-button">
+    <a class="btn btn-primary navbar-btn" href="/private/wx/menu/add/<%=wxid%>" data-pjax><i class="ti-plus"></i> 添加菜单</a>
+    <a href="/private/wx/menu/index/<%=wxid%>" data-pjax id="_reload"></a>
+  </div>
+  <div class="btn-group">
+    <div >
+      <select id="wxid" name="wxid" class="form-control">
+        <% if(list){
+          list.forEach(function(o){
+        %>
+        <option value="<%= o.id %>" <%if(o.id==wxid){%>selected<%}%>><%- o.appname %></option>
+        <%
+        });
+        } %>
+      </select>
+    </div>
+  </div>
+  <div class="pull-right">
+    <div class="btn-group tool-button">
+      <button class="btn btn-primary navbar-btn" onclick="sort()"> 保存排序</button>
+    </div>
+    <div class="btn-group tool-button">
+      <button class="btn btn-primary navbar-btn" onclick="complete()"><i class="ti-share"></i> 推送到微信</button>
+    </div>
+  </div>
+</header>
+<div class="modal-body no-p">
+  <div class="panel">
+    <div class="panel-heading no-b">
+    </div>
+    <div class="panel-body" style="padding-top: 30px;">
+      <%
+      var firstMenus = [], secondMenus = {};
+      if(menus!=undefined){
+      menus.forEach(function (obj) {
+        if (obj&&obj.path.length == 4) {
+          firstMenus.push(obj);
+        } else if(obj){
+          var s = secondMenus[obj.path.substring(0, obj.path.length - 4)] || [];
+          if (JSON.stringify(s).indexOf(JSON.stringify(obj)) < 0) {
+            s.push(obj);
+          }
+          secondMenus[obj.path.substring(0, obj.path.length - 4)] = s;
+        }
+      });
+      }
+      %>
+      <div class="cf nestable-lists">
+        <div class="dd" id="nestable3">
+          <ol class="dd-list">
+            <% firstMenus.forEach(function(obj){ %>
+            <li class="dd-item dd3-item" data-id="<%= obj.id %>">
+              <div class="dd-handle dd3-handle">Drag</div>
+              <div class="dd3-content"><%= obj.name %> <span style="color: deepskyblue"> <%= obj.key||'' %><%= obj.url||'' %></span>
+                <div class="btn-group pull-right"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                    <i class="ti-settings"></i> <span class="ti-angle-down"></span></button><ul class="dropdown-menu" role="menu">
+                    <li><a href="/private/wx/menu/edit/<%= obj.id %>" data-pjax>修改</a></li>
+                    <li><a href="javascript:;" onclick="del(<%= obj.id %>)">删除</a></li>
+                </ul></div>
+              </div>
+              <% if(secondMenus[obj.path]){ %>
+              <ol class="dd-list">
+                <% secondMenus[obj.path].forEach(function(secondMenu){ %>
+                <li class="dd-item dd3-item" data-id="<%= secondMenu.id %>">
+                  <div class="dd-handle dd3-handle">Drag</div>
+                  <div class="dd3-content"><%= secondMenu.name %> <span style="color: deepskyblue"> <%= secondMenu.key||'' %><%= secondMenu.url||'' %></span>
+                    <div class="btn-group pull-right"><button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
+                        <i class="ti-settings"></i> <span class="ti-angle-down"></span></button><ul class="dropdown-menu" role="menu">
+                        <li><a href="/private/wx/menu/edit/<%= secondMenu.id %>" data-pjax>修改</a></li>
+                        <li><a href="javascript:;" onclick="del(<%= secondMenu.id %>)">删除</a></li>
+                      </ul></div>
+                  </div>
+                </li>
+                <% }); %>
+              </ol>
+              <% } %>
+            </li>
+            <% }); %>
+
+          </ol>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<div id="dialogDelete" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">删除菜单</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xs-12">
+            删除后无法恢复，请谨慎操作！
+            <br/>确定要删除吗？
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+        <button id="ok" type="button" class="btn btn-primary" data-loading-text="正在删除...">确 定</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  function del(id){
+    var dialog = $("#dialogDelete");
+    dialog.modal("show");
+    dialog.find("#ok").unbind("click");
+    dialog.find("#ok").bind("click", function(event){
+      var btn = $(this);
+      btn.button("loading");
+      $.post("/private/wx/menu/delete/"+id,{},function(data){
+        //重置按钮状态，关闭提示框
+        dialog.modal("hide");
+        if(data.code==0){
+          Toast.success(data.msg);
+          treeTable.treetable("removeNode", id);
+          //从表格中移除此行
+        }else{
+          Toast.error(data.msg);
+        }
+        btn.button("reset");
+      },"json");
+    });
+  }
+  function sort(){
+    $.post("/private/wx/menu/sortDo", {wxid:'<%=wxid%>',ids: $("#nestable3").nestable('serialize')}, function (data) {
+      if (data.code == 0) {
+        Toast.success(data.msg);
+      } else {
+        Toast.error(data.msg);
+      }
+    }, "json");
+  }
+  function complete(){
+    sublime.showLoadingbar($(".main-content"));
+    $.post("/private/wx/menu/pushMenu", {wxid:'<%=wxid%>'}, function (data) {
+      sublime.closeLoadingbar($(".main-content"));
+      if (data.code == 0) {
+        Toast.success(data.msg);
+
+      } else {
+        Toast.error(data.msg);
+      }
+    }, "json");
+  }
+  $(function () {
+    $("#nestable3").nestable();
+    $("#wxid").on("change",function(){
+      $("#_reload").attr("href","/private/wx/menu/index/"+$(this).val());
+      $("#_reload").trigger("click");
+    });
+  });
+
+</script>

@@ -1,0 +1,386 @@
+<form id="addForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+      action="/private/conf/shop/editDo" method="post">
+  <input name="id" id="id" value="1" type="hidden">
+  <header class="header navbar bg-white shadow">
+  <div class="pull-right">
+    <div class="btn-group tool-button">
+      <button class="btn btn-primary navbar-btn" type="button" id="save"><span class="ti-save"></span> 保存</button>
+    </div>
+  </div>
+</header>
+
+<div class="content-wrap">
+  <div class="wrapper" style="min-height:500px;height: 100%;">
+
+
+      <div class="box-tab">
+        <ul class="nav nav-tabs">
+          <li class="active"><a href="#shop_base" data-toggle="tab">基本设置</a>
+          </li>
+          <li><a href="#shop_member" data-toggle="tab">会员注册设置</a>
+          </li>
+          <li><a href="#shop_list" data-toggle="tab">商品列表页设置</a>
+          </li>
+          <li><a href="#shop_yf" data-toggle="tab">运费设置</a>
+          </li>
+          <li><a href="#shop_fp" data-toggle="tab">发票设置</a>
+          </li>
+          <li><a href="#shop_pay" data-toggle="tab">支付方式配置</a>
+          </li>
+        </ul>
+        <div class="tab-content">
+          <div class="tab-pane fade active in" id="shop_base">
+            <div class="col-lg-12">
+              <div class="form-group">
+                <label class="col-sm-2 control-label">商城模板</label>
+
+                <div class="col-sm-8">
+                  <select class="form-control" name="shop_templet">
+                    <option value="default" <%=obj.shop_templet=='default'?'selected':''%>>default</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">商城样式</label>
+
+                <div class="col-sm-8">
+                  <select class="form-control" name="shop_css">
+                    <option value="green" <%=obj.shop_css=='grenn'?'selected':''%>>绿色</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="shop_member">
+            <div class="col-lg-12">
+              <div class="form-group">
+                <label class="col-sm-2 control-label">网页注册赠送优惠券</label>
+                <div class="col-sm-8" style="padding-top: 5px;">
+                  <select class="form-control" name="member_reg_coupon">
+                    <option value="0">无</option>
+                    <%couponList.forEach(function(o){
+                    if(o.maxNum> o.hasNum){
+                    %>
+                    <option value="<%=o.id%>" <%=obj.member_reg_coupon==o.id?'selected':''%>><%=o.name%></option>
+
+                    <%}});%>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">网页注册赠送积分</label>
+                <div class="col-sm-8" style="padding-top: 5px;">
+                  <input class="form-control" name="member_reg_score" value="<%=obj.member_reg_score||0%>">
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="col-sm-2 control-label">微信关注自动创建帐号</label>
+                <div class="col-sm-8" style="padding-top: 5px;">
+                  <input type="radio" name="member_weixinreg_auto" value="1" <%if(obj.member_weixinreg_auto){%>checked<%}%>>开启
+                  <input type="radio" name="member_weixinreg_auto" value="0" <%if(!obj.member_weixinreg_auto){%>checked<%}%>>关闭
+                </div>
+              </div>
+              <div id="div_wx_1" style="display: <%=obj.member_weixinreg_auto==true?'block':'none'%>" class="form-group">
+                <label class="col-sm-2 control-label">微信关注赠送优惠券</label>
+                <div class="col-sm-8" style="padding-top: 5px;">
+                  <select class="form-control" name="member_weixinreg_coupon">
+                    <option value="0">无</option>
+                    <%couponList.forEach(function(o){
+                    if(o.maxNum> o.hasNum){
+                    %>
+                    <option value="<%=o.id%>" <%=obj.member_weixinreg_coupon==o.id?'selected':''%>><%=o.name%></option>
+
+                    <%}});%>
+                  </select>
+                </div>
+              </div>
+              <div id="div_wx_2" style="display: <%=obj.member_weixinreg_auto==true?'block':'none'%>" class="form-group">
+                <label class="col-sm-2 control-label">微信关注赠送积分</label>
+                <div class="col-sm-8" style="padding-top: 5px;">
+                  <input class="form-control" name="member_weixinreg_score" value="<%=obj.member_weixinreg_score||0%>">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="shop_list">
+            <div class="col-lg-12">
+              <div class="form-group">
+                <label class="col-sm-2 control-label">商品分页加载方式</label>
+                <div class="col-sm-8" style="padding-top: 5px;">
+                  <select class="form-control" name="list_load_type">
+                    <option value="ajax" <%=obj.list_load_type=='ajax'?'selected':''%>>Ajax</option>
+                    <option value="page" <%=obj.list_load_type=='page'?'selected':''%>>分页</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">商品每页显示条数</label>
+                <div class="col-sm-8" style="padding-top: 5px;">
+                  <select class="form-control" name="list_page_size">
+                    <option value="4" <%=obj.list_page_size==4?'selected':''%>>4</option>
+                    <option value="8" <%=obj.list_page_size==8?'selected':''%>>8</option>
+                    <option value="12" <%=obj.list_page_size==12?'selected':''%>>12</option>
+                    <option value="16" <%=obj.list_page_size==16?'selected':''%>>16</option>
+                    <option value="20" <%=obj.list_page_size==20?'selected':''%>>20</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">是否启用快速购买</label>
+                <div class="col-sm-8" style="padding-top: 5px;">
+                  <input type="radio" name="list_quick_buy" value="1" <%=obj.list_quick_buy==true?'checked':''%>>是
+                  <input type="radio" name="list_quick_buy" value="0" <%=obj.list_quick_buy==false?'checked':''%>>否
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="shop_yf">
+            <div class="col-lg-12">
+              <div class="form-group">
+                <label class="col-sm-2 control-label">是否开启运费</label>
+                <div class="col-sm-8" style="padding-top: 5px;">
+                  <input type="radio" name="freight_disabled" value="0" <%if(!obj.freight_disabled){%>checked<%}%>>启用
+                  <input type="radio" name="freight_disabled" value="1" <%if(obj.freight_disabled){%>checked<%}%>>禁用
+
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">运费计算方式</label>
+                <div class="col-sm-8" style="padding-top: 5px;">
+                  <select class="form-control" name="freight_type">
+                    <option value="price" <%=obj.freight_type=='price'?'selected':''%>>按订单总金额</option>
+                    <option value="weight" <%=obj.freight_type=='weight'?'selected':''%>>按商品总重量</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">运费金额(单位：元)</label>
+                <div class="col-sm-8" style="padding-top: 5px;">
+                  <input class="form-control" name="freight_price" value="<%=obj.freight_price||0%>">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">计算基数<br>(单位：< 元或 >= g)</label>
+                <div class="col-sm-8" style="padding-top: 5px;">
+                  <input class="form-control" name="freight_num" value="<%=obj.freight_num||0%>">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="shop_fp">
+            <div class="col-lg-12">
+              <div class="form-group">
+                <label class="col-sm-2 control-label">是否启用发票</label>
+                <div class="col-sm-8" style="padding-top: 5px;">
+                  <input type="radio" name="tax_disabled" value="0" <%if(!obj.tax_disabled){%>checked<%}%>>启用
+                  <input type="radio" name="tax_disabled" value="1" <%if(obj.tax_disabled){%>checked<%}%>>禁用
+
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">订单满多少可开(单位：元)</label>
+                <div class="col-sm-8" style="padding-top: 5px;">
+                  <input class="form-control" name="tax_price" value="<%=obj.tax_price||0%>">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tab-pane fade" id="shop_pay">
+            <div class="col-lg-12">
+              <div class="form-group">
+                <label class="col-sm-2 control-label">货到付款</label>
+                <div class="col-sm-8" style="padding-top: 5px;">
+                  <input type="radio" name="pay_cash" value="1" <%if(obj.pay_cash){%>checked<%}%>>启用
+                  <input type="radio" name="pay_cash" value="0" <%if(!obj.pay_cash){%>checked<%}%>>禁用
+
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">余额支付</label>
+                <div class="col-sm-8" style="padding-top: 5px;">
+                  <input type="radio" name="pay_money" value="1" <%if(obj.pay_money){%>checked<%}%>>启用
+                  <input type="radio" name="pay_money" value="0" <%if(!obj.pay_money){%>checked<%}%>>禁用
+
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">支付宝支付</label>
+                <div class="col-sm-8" style="padding-top: 5px;">
+                  <input type="radio" name="pay_alipay" value="1" <%if(obj.pay_alipay){%>checked<%}%>>启用
+                  <input type="radio" name="pay_alipay" value="0" <%if(!obj.pay_alipay){%>checked<%}%>>禁用
+                  <button class="btn btn-info" type="button" id="btnAlipay" data-toggle="modal" data-target="#dialogAlipay"> 配置</button>
+                  <input name="pay_alipay_info" id="pay_alipay_info" type="hidden" value="<%-JSON.stringify(obj.pay_alipay_info)||{}%>">
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="col-sm-2 control-label">微信支付</label>
+                <div class="col-sm-8" style="padding-top: 5px;">
+                  <input type="radio" name="pay_wxpay" value="1" <%if(obj.pay_wxpay){%>checked<%}%>>启用
+                  <input type="radio" name="pay_wxpay" value="0" <%if(!obj.pay_wxpay){%>checked<%}%>>禁用
+                  <button class="btn btn-info" type="button" id="btnWxpay" data-toggle="modal" data-target="#dialogWxpay"> 配置</button>
+                  <input name="pay_wxpay_info" id="pay_wxpay_info" type="hidden" value="<%-JSON.stringify(obj.pay_wxpay_info)||{}%>">
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+  </div>
+</div>
+</form>
+<div id="dialogAlipay" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">支付宝支付配置</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="form-group">
+            <label class="col-sm-4 control-label">合作者身份(parterID)</label>
+            <div class="col-sm-6" style="padding-bottom: 5px;">
+              <input id="alipay_parter" type="text" class="form-control" value="<%if(obj.pay_alipay_info){%><%=obj.pay_alipay_info.alipay_parter||''%><%}%>">
+
+            </div>
+          </div>
+          </div>
+        <div class="row">
+          <div class="form-group">
+            <label class="col-sm-4 control-label">安全校验码(key)</label>
+            <div class="col-sm-6" style="padding-bottom: 5px;">
+              <input id="alipay_key" type="text" class="form-control" value="<%if(obj.pay_alipay_info){%><%=obj.pay_alipay_info.alipay_key||''%><%}%>">
+
+            </div>
+          </div>
+          </div>
+        <div class="row">
+          <div class="form-group">
+            <label class="col-sm-4 control-label">支付宝账号</label>
+            <div class="col-sm-6" style="padding-bottom: 5px;">
+              <input id="alipay_email" type="text" class="form-control" value="<%if(obj.pay_alipay_info){%><%=obj.pay_alipay_info.alipay_email||''%><%}%>">
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btnAli" type="button" class="btn btn-default" data-dismiss="modal">清 除</button>
+        <button type="button" data-dismiss="modal" class="btn btn-primary" data-loading-text="确定...">确 定</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="dialogWxpay" class="modal fade bs-modal-sm" tabindex="-2" role="dialog" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">微信支付配置</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="form-group">
+            <label class="col-sm-3 control-label">AppId</label>
+            <div class="col-sm-7" style="padding-bottom: 5px;">
+              <input id="wxpay_appid" type="text" class="form-control" value="<%if(obj.pay_wxpay_info){%><%=obj.pay_wxpay_info.wxpay_appid||''%><%}%>">
+
+            </div>
+          </div>
+         </div><div class="row">
+          <div class="form-group">
+            <label class="col-sm-3 control-label">Mchid</label>
+            <div class="col-sm-7" style="padding-bottom: 5px;">
+              <input id="wxpay_mchid" type="text" class="form-control" value="<%if(obj.pay_wxpay_info){%><%=obj.pay_wxpay_info.wxpay_mchid||''%><%}%>">
+
+            </div>
+          </div>
+          </div><div class="row">
+          <div class="form-group">
+            <label class="col-sm-3 control-label">key</label>
+            <div class="col-sm-7" style="padding-bottom: 5px;">
+              <input id="wxpay_key" type="text" class="form-control" value="<%if(obj.pay_wxpay_info){%><%=obj.pay_wxpay_info.wxpay_key||''%><%}%>">
+
+            </div>
+          </div>
+          </div><div class="row">
+          <div class="form-group">
+            <label class="col-sm-3 control-label">AppSecret</label>
+            <div class="col-sm-7" style="padding-bottom: 5px;">
+              <input id="wxpay_appsecret" type="text" class="form-control" value="<%if(obj.pay_wxpay_info){%><%=obj.pay_wxpay_info.wxpay_appsecret||''%><%}%>">
+
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group">
+            <label class="col-sm-3 control-label">请在微信后台添加支付授权目录</label>
+            <div class="col-sm-7" style="padding-bottom: 5px;">
+              http://<%=sails.config.system.AppDomain%>/wap/shopcart/order/<br>
+              http://<%=sails.config.system.AppDomain%>/wap/member/
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btnWx" type="button" class="btn btn-default" data-dismiss="modal">清 除</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" data-loading-text="确定...">确 定</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script language="JavaScript">
+  $(document).ready(function () {
+    $("input[name=member_weixinreg_auto]").on("click",function(){
+      if($(this).val()=='1'){
+        $("#div_wx_1").show();
+        $("#div_wx_2").show();
+      }else {
+        $("#div_wx_1").hide();
+        $("#div_wx_2").hide();
+      }
+    });
+    $("#btnWx").on("click",function(){
+      $("#dialogWxpay input[type=text]").each(function(){
+        $(this).val("");
+      });
+    });
+    $("#btnAli").on("click",function(){
+      $("#dialogAlipay input[type=text]").each(function(){
+        $(this).val("");
+      });
+    });
+    $("#save").on("click",function(){
+      var alipay={};
+      alipay.alipay_parter=$("#alipay_parter").val();
+      alipay.alipay_key=$("#alipay_key").val();
+      alipay.alipay_email=$("#alipay_email").val();
+      $("#pay_alipay_info").val(JSON.stringify(alipay));
+      var wxpay={};
+      wxpay.wxpay_appid=$("#wxpay_appid").val();
+      wxpay.wxpay_mchid=$("#wxpay_mchid").val();
+      wxpay.wxpay_key=$("#wxpay_key").val();
+      wxpay.wxpay_appsecret=$("#wxpay_appsecret").val();
+      $("#pay_wxpay_info").val(JSON.stringify(wxpay));
+      $('#addForm').submit();
+    });
+      $('#addForm').ajaxForm({
+        dataType: 'json',
+        beforeSubmit: function (arr, form, options) {
+          sublime.showLoadingbar($(".main-content"));
+        },
+        success: function (data, statusText, xhr, form) {
+          if (data.code == 0) {
+            Toast.success(data.msg);
+          } else {
+            Toast.error(data.msg);
+          }
+          sublime.closeLoadingbar($(".main-content"));
+        }
+      });
+  });
+</script>

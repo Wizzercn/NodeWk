@@ -1,0 +1,61 @@
+<div class="modal-body no-p">
+  <div class="row">
+    <div class="col-xs-12">
+      <section class="panel panel-primary no-b">
+        <header class="panel-heading clearfix brtl brtr">
+          <div class="overflow-hidden">
+            <a href="javascript:;" class="h4 show no-m pt5">IP策略</a>
+          </div>
+        </header>
+        <div class="list-group" style="text-align: center;padding-top: 10px;">
+          <table width="80%" style="padding: 10px;">
+            <tr style="height: 40px;">
+              <td width="30%" align="right">IP地址(IPv4/IPv6)：</td>
+              <td width="70%" align="left">
+                <input name="ip" id="ip" maxlength="200" class="form-control" value="<%=obj.ip||''%>"/>
+              </td>
+            </tr>
+            <tr style="height: 30px;">
+              <td width="30%" align="right">是否启用：</td>
+              <td width="70%" align="left">
+                <input type="radio" name="ck" value="0" <%=obj.disabled==false?'checked':''%>>启用
+                <input type="radio" name="ck" value="1" <%=obj.disabled==true?'checked':''%>>不启用
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div style="width: 400px;margin-left: 100px;" class="alert alert-warning alert-dismissable">
+          <strong>注意：</strong>前后不要有空格<br>
+          &nbsp;若启用则后台只允许配置的IP地址登录
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-default" data-dismiss="modal">取 消</button>
+  <button onclick="save()" id="save" type="button" class="btn btn-primary" data-loading-text="正在提交...">确 定</button>
+</div>
+<script type="text/javascript">
+  function save(){
+    if($("#ip").val()==""){
+      Toast.error("IP地址不可为空");
+      return false;
+    }
+    var btn = $("#save");
+    var dialog = $("#dialogDetail");
+    btn.button("loading");
+    $.post("/private/sys/ip/editDo", {id: <%=obj.id%>,ip:$("#ip").val(),ck:$("input[name=ck]:checked").val()}, function (data) {
+      if (data.code == 0) {
+        Toast.success("提交成功");
+        dialog.modal("hide");
+        datatable.ajax.reload();
+      } else {
+        Toast.error(data.msg);
+      }
+      btn.button("reset");
+
+    }, "json");
+  }
+</script>

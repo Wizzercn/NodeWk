@@ -1,0 +1,75 @@
+<header class="header navbar bg-white shadow">
+  <div class="btn-group tool-button">
+    <a class="btn btn-primary navbar-btn" href="/private/shop/area" data-pjax id="goback"><i class="ti-angle-left"></i> 返回</a>
+  </div>
+</header>
+
+<div class="content-wrap">
+  <div class="wrapper" style="min-height:500px;">
+    <section class="panel panel-form">
+      <form id="unitAddForm" role="form" class="form-horizontal parsley-form" data-parsley-validate
+            action="/private/shop/area/editDo" method="post">
+        <input type="hidden" id="id" name="id" value="<%=obj.id%>">
+        <div class="row mb10">
+          <div class="col-lg-12">
+            <div class="form-group has-feedback">
+              <label for="parentId" class="col-sm-2 control-label">上级区域</label>
+
+              <div class="col-sm-8">
+                  <input id="parentId" type="text" class="form-control" placeholder="顶级区域" disabled
+                         value="<%=typeof parentUnit!='undefined'?parentUnit.name:'' %>"/>
+                <input type="hidden" name="parentId" value="<%=typeof parentUnit!='undefined'?parentUnit.id:0 %>">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="name" class="col-sm-2 control-label">名称</label>
+
+              <div class="col-sm-8">
+                <input type="text" id="name" class="form-control" name="name" value="<%=obj.name%>" data-parsley-required="true"
+                       placeholder="名称">
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="col-lg-3"></div>
+        <div class="col-lg-6">
+          <div class="form-group text-center">
+            <label></label>
+
+            <div>
+              <button class="btn btn-primary btn-block btn-lg btn-parsley" data-loading-text="正在提交...">提 交</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </section>
+
+  </div>
+</div>
+<a class="exit-offscreen"></a>
+<script language="JavaScript">
+  $(document).ready(function () {
+    //图标样式 实时预览
+    $("#icon").on("keyup", function(){
+      $("#iconPreview").attr("class", $(this).val());
+    });
+    $('#unitAddForm').ajaxForm({
+      dataType: 'json',
+      beforeSubmit: function (arr, form, options) {
+        form.find("button:submit").button("loading");
+      },
+      success: function (data, statusText, xhr, form) {
+        if (data.code==0) {
+          Toast.success(data.msg);
+          setTimeout(function () {
+            $("#goback").trigger("click");
+          }, 1000);
+        } else {
+          Toast.error(data.msg);
+        }
+        form.find("button:submit").button("reset");
+      }
+    });
+  });
+</script>

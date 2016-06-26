@@ -1,0 +1,84 @@
+<header class="header navbar bg-white shadow">
+  <div class="btn-group tool-button">
+    <a class="btn btn-primary navbar-btn" href="/private/shop/area" data-pjax id="goback"><i class="ti-angle-left"></i> 返回</a>
+  </div>
+  <div class="pull-right">
+    <div class="btn-group tool-button">
+      <button class="btn btn-primary navbar-btn" onclick="complete()"> 保存</button>
+    </div>
+  </div>
+</header>
+<div class="modal-body no-p">
+  <div class="panel">
+    <div class="panel-heading no-b">
+    </div>
+    <div class="panel-body" style="padding-top: 50px;">
+      <%
+      var firstMenus = [], secondMenus = {};
+      menus.forEach(function (obj) {
+        if (obj.path.length == len) {
+          firstMenus.push(obj);
+        } else {
+          var s = secondMenus[obj.path.substring(0, obj.path.length - 4)] || [];
+          if (JSON.stringify(s).indexOf(JSON.stringify(obj)) < 0) {
+            s.push(obj);
+          }
+          secondMenus[obj.path.substring(0, obj.path.length - 4)] = s;
+        }
+      });
+      %>
+      <div class="cf nestable-lists">
+        <div class="dd" id="nestable3">
+          <ol class="dd-list">
+            <% firstMenus.forEach(function(obj){ %>
+            <li class="dd-item dd3-item" data-id="<%= obj.id %>">
+              <div class="dd-handle dd3-handle">Drag</div>
+              <div class="dd3-content"><%= obj.name %></div>
+              <% if(secondMenus[obj.path]){ %>
+              <ol class="dd-list">
+                <% secondMenus[obj.path].forEach(function(secondMenu){ %>
+                <li class="dd-item dd3-item" data-id="<%= secondMenu.id %>">
+                  <div class="dd-handle dd3-handle">Drag</div>
+                  <div class="dd3-content"><%= secondMenu.name %></div>
+                  <% if(secondMenus[secondMenu.path]){ %>
+                  <ol class="dd-list">
+                    <% secondMenus[secondMenu.path].forEach(function(thMenu){ %>
+                    <li class="dd-item dd3-item" data-id="<%= thMenu.id %>">
+                      <div class="dd-handle dd3-handle">Drag</div>
+                      <div class="dd3-content"><%= thMenu.name %></div>
+                    </li>
+                    <% }); %>
+                  </ol>
+                  <% } %>
+                </li>
+                <% }); %>
+              </ol>
+              <% } %>
+            </li>
+            <% }); %>
+
+          </ol>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+  function complete(){
+    $.post("/private/shop/area/sortDo", {ids: $("#nestable3").nestable('serialize')}, function (data) {
+      if (data.code == 0) {
+        Toast.success(data.msg);
+        setTimeout(function () {
+          $("#goback").trigger("click");
+        }, 1000);
+      } else {
+        Toast.error(data.msg);
+      }
+    }, "json");
+  }
+  $(function () {
+    $("#nestable3").nestable();
+  });
+
+</script>
