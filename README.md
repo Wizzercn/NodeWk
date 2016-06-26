@@ -1,35 +1,37 @@
 NodeWk 1.0
 ======
-»ùÓÚSails.js MVC¿ª·¢£¬ÊµÏÖ³£ÓÃµÄÏµÍ³¡¢Î¢ĞÅ¡¢CMSµÈ¹¦ÄÜ
+åŸºäºSails.js MVCå¼€å‘ï¼Œå®ç°å¸¸ç”¨çš„ç³»ç»Ÿã€å¾®ä¿¡ã€CMSç­‰åŠŸèƒ½
 
-PS£ºÈç¹û¶ÔJava¿ª·¢¿ò¼Ü¸ĞĞËÈ¤£¬¿ÉÒÔ¿´ÕâÀï£ºhttps://github.com/Wizzercn/NutzWk
+PSï¼šå¦‚æœå¯¹Javaå¼€å‘æ¡†æ¶æ„Ÿå…´è¶£ï¼Œå¯ä»¥çœ‹è¿™é‡Œï¼šhttps://github.com/Wizzercn/NutzWk
 
 ======
-»ùÓÚSailsjsµÄNode.js¿ªÔ´ÆóÒµ¼¶¿ª·¢¿ò¼Ü
+åŸºäºSailsjsçš„Node.jså¼€æºä¼ä¸šçº§å¼€å‘æ¡†æ¶
 
-NodeWk 1.0 ÔËĞĞ»·¾³£º
-*   Node v6.x
+NodeWk 1.0 è¿è¡Œç¯å¢ƒï¼š
+*   Node æœ€æ–°ç‰ˆ
+*   Redis æœ€æ–°ç‰ˆ
+*   MySql 5.x
 
-NodeWk 1.0 ÌØĞÔ£º
-*   Ö§³ÖÓïÑÔ¹ú¼Ê»¯
-*   Ö§³Ö¶¯×÷Á´
-*   ¼¯³ÉEmail·şÎñ
-*   ¼¯³ÉQuartz¶¨Ê±ÈÎÎñ
-*   ¼¯³ÉEjsÄ£°åÒıÇæ
-*   ºóÌ¨¹ÜÀí½çÃæ²ÉÓÃPjax+Bootstrap
-*   ×Ô¶¨ÒåÂ·ÓÉ
-
-
-Ê¹ÓÃËµÃ÷£º
-*   ´î½¨Node.jsÔËĞĞ»·¾³
-*   °²×°±Ø±¸×é¼şyum install ImageMagick-c++.x86_64
-*   ´´½¨¿ÕµÄÊı¾İ¿â,Ê¹ÓÃnodewk.sql»¹Ô­Êı¾İ¿â
-*   ĞŞ¸ÄÊı¾İ¿âÁ¬½Ó¼°redis /config/custom/mysql.js /config/custom/redis.js
-*   npm i °²×°(hiredis±¨´í²»Ó°ÏìÔËĞĞ)
-*   ÓÃ»§Ãû£ºsuperadmin  ÃÜÂë£º1
+NodeWk 1.0 ç‰¹æ€§ï¼š
+*   æ”¯æŒè¯­è¨€å›½é™…åŒ–
+*   æ”¯æŒåŠ¨ä½œé“¾
+*   é›†æˆEmailæœåŠ¡
+*   é›†æˆQuartzå®šæ—¶ä»»åŠ¡
+*   é›†æˆEjsæ¨¡æ¿å¼•æ“
+*   åå°ç®¡ç†ç•Œé¢é‡‡ç”¨Pjax+Bootstrap
+*   è‡ªå®šä¹‰è·¯ç”±
 
 
-ÔÚÏßÑİÊ¾µØÖ·
+ä½¿ç”¨è¯´æ˜ï¼š
+*   æ­å»ºNode.jsè¿è¡Œç¯å¢ƒ
+*   å®‰è£…å¿…å¤‡ç»„ä»¶yum install ImageMagick-c++.x86_64
+*   åˆ›å»ºç©ºçš„æ•°æ®åº“,ä½¿ç”¨nodewk.sqlè¿˜åŸæ•°æ®åº“
+*   ä¿®æ”¹æ•°æ®åº“è¿æ¥åŠredis /config/custom/mysql.js /config/custom/redis.js
+*   npm i å®‰è£…(hiredisæŠ¥é”™ä¸å½±å“è¿è¡Œ)
+*   ç”¨æˆ·åï¼šsuperadmin  å¯†ç ï¼š1
+
+
+åœ¨çº¿æ¼”ç¤ºåœ°å€
 ======
 
 http://www.nodeshop.cn/sysadmin               NodeWk 1.0
