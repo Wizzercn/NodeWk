@@ -85,7 +85,7 @@
         if (data.code == 0) {
           $("#tip").hide();
           form.find("button:submit").text("<%=sails.__('private.login.load')%>");
-          window.location.href = "/private/cms/article";
+          window.location.href = "/sysadmin/home";
         } else if (data.code == 2) {
           $("#verifycode").val("");
           $("#dialogVeryCode img").attr("src", '/private/login/captcha?_=' + new Date().getTime());
