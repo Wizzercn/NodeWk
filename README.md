@@ -13,12 +13,19 @@ NodeWk 1.0 运行环境：
 *   MySql 5.x
 
 NodeWk 1.0 特性：
-*   支持语言国际化
-*   支持动作链
-*   集成Email服务
-*   集成Quartz定时任务
+*   集成Email服务(nodemailer)
+*   集成定时任务(node-schedule)
+*   集成验证码插件(captchapng)
+*   集成微信api插件(wechat-oauth/wechat-api)
+*   集成日志文件插件(winston)
+*   集成图片处理插件(gm)
+*   集成日期插件(moment)
+*   集成数据库备份插件(mysqldump)
+*   集成文件打包插件(jszip)
 *   集成Ejs模板引擎
 *   后台管理界面采用Pjax+Bootstrap
+*   支持国际化字符串
+*   支持动作链
 *   自定义路由
 
 
