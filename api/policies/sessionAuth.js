@@ -4,7 +4,7 @@
  */
 module.exports = function (req, res, next) {
   if (req.url.lastIndexOf('/pie.htc')>0)return res.end('');
-  if(req.url.indexOf('delete')>0||req.url.indexOf('doChangePassword')>0||req.url.indexOf('resetPwd')>0||req.url.indexOf('editDo')>0||req.url.indexOf('disable')>0){
+  if(req.url.indexOf('delete')>0||req.url.indexOf('doChangePassword')>0||req.url.indexOf('resetPwd')>0||req.url.indexOf('editDo')>0||req.url.indexOf('addDo')>0||req.url.indexOf('editMenuDo')>0||req.url.indexOf('disable')>0||req.url.indexOf('enable')>0||req.url.indexOf('delUser')>0){
     return res.json({code:1,msg:'被禁止的操作'});
   }
   if (req.options.controller.indexOf('private/') == 0 && req.options.controller.indexOf('private/login') < 0) {
