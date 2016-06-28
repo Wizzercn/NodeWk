@@ -246,7 +246,7 @@
   function each(node, tree, nodes) {
     var p = tree.get_parent(node);
     if (p.length > 1) {
-      if (!isExists(p, nodes))
+      if (nodes&&p&&nodes.indexOf(p)<0)
         nodes.push(p);
       each(p, tree, nodes);
     }
