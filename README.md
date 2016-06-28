@@ -4,6 +4,12 @@ NodeWk 1.0
 
 PS：如果对Java开发框架感兴趣，可以看这里：https://github.com/Wizzercn/NutzWk
 
+在线演示地址
+======
+
+http://www.nodeshop.cn/sysadmin               NodeWk 1.0
+
+
 ======
 基于Sailsjs的Node.js开源企业级开发框架
 
@@ -38,8 +44,4 @@ NodeWk 1.0 特性：
 *   用户名：superadmin  密码：1
 
 
-在线演示地址
-======
-
-http://www.nodeshop.cn/sysadmin               NodeWk 1.0
 
