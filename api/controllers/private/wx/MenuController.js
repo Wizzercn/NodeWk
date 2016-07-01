@@ -66,8 +66,9 @@ module.exports = {
       if (m)path = m.path || '';
       Wx_menu.find().where({parentId: parentId}).sort({path: 'desc'}).limit(1).exec(function (ferr, objs) {
         if (objs.length > 0) {
-          var num = parseInt(objs[0].path) + 1;
-          path = StringUtil.getPath(num, objs[0].path.length);
+          var per=objs[0].path.substring(0,objs[0].path.length-4);
+          var next=objs[0].path.substring(objs[0].path.length-4);
+          path = per+StringUtil.getPath(parseInt(next) + 1, next.length);
         } else {
           path = path + '0001';
         }
