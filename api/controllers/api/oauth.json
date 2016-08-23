@@ -1,0 +1,45 @@
+/**
+ * @api {POST} /api/oauth/token 01.Token
+ * @apiName Token
+ * @apiGroup Oauth
+ * @apiVersion 1.0.0
+ * @apiDescription 获取Token
+ * @apiPermission anyone
+ *
+ * @apiParam {string} client_id client_id
+ * @apiParam {string} client_secret client_secret
+ *
+ * @apiParamExample {json} 示例
+ *   POST /api/oauth/token
+ *   {
+ *      "client_id": "client_id",
+ *      "client_secret": "client_secret"
+ *   }
+ *
+ * @apiSuccess (成功) {number} code 0
+ * @apiSuccess (成功) {string} msg success
+ * @apiSuccess (成功) {Object} data Token对象
+ * @apiSuccess (成功) {string} data.token Token
+ * @apiSuccess (成功) {number} data.expires 失效时间(24小时)请保存若失效重新获取
+ * @apiSuccess (成功) {number} data.appid AppId
+ * @apiSuccessExample {json} 示例
+ *   HTTP/1.1 200 OK
+ *   {
+ *     "code": 0,
+ *     "msg": "success",
+ *     "data": {
+ *       "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOjIsImV4cCI6MTQ2NDE1NjA2OTg3Nn0.4i_o7gCjCKvOImSi4peCMgCUrzpdgbtmvMECKf5wkqE",
+ *       "expires": 1464156069876,
+ *       "appid": 2
+ *     }
+ *   }
+ *
+ * @apiError (失败) {number} code 1:client_id不存在 2:client_id禁用 3:client_secret错误 4:参数错误
+ * @apiError (失败) {string} msg 错误文字描述
+ * @apiErrorExample {json} 示例
+ *   HTTP/1.1 200 OK
+ *   {
+ *     "code": 1
+ *     "msg": "client_id has error"
+ *   }
+ */
