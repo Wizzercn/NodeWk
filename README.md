@@ -43,6 +43,7 @@ NodeWk 1.0.x 特性：
 *   创建空的数据库,使用nodewk.sql还原数据库
 *   修改数据库连接及redis /config/custom/mysql.js /config/custom/redis.js
 *   npm i 安装(hiredis报错不影响运行)
+*   node app.js 或 npm start 运行
 *   用户名：superadmin  密码：1
 
 
