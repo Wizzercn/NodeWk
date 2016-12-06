@@ -3,10 +3,10 @@
  */
 module.exports.system = {
   AppBase:'',
-  AppName:'上城内容管理系统',
-  AppDomain:'wizzer.wicp.net',
+  AppName:'NodeWk',
+  AppDomain:'www.nodeshop.cn',
   AppIp:'127.0.0.1',
-  AppShrotName:'上城CMS',
+  AppShrotName:'NodeWk',
   AppCopyright:'Wizzer.cn',
   UploadPath:'/upload',
   MyConfig:{},

@@ -1,4 +1,4 @@
-NodeWk 1.0
+NodeWk 1.0.3
 ======
 基于Sails.js MVC开发，实现常用的系统、微信、CMS等功能
 
@@ -7,18 +7,20 @@ PS：如果对Java开发框架感兴趣，可以看这里：https://github.com/W
 在线演示地址
 ======
 
-http://www.nodeshop.cn/sysadmin               NodeWk 1.0
+https://www.nodeshop.cn/sysadmin        NodeWk 演示地址(node)
+
+https://nutzwk.wizzer.cn        NutzWk 演示地址(java)
 
 
 ======
 基于Sailsjs的Node.js开源企业级开发框架
 
-NodeWk 1.0 运行环境：
+NodeWk 1.0.x 运行环境：
 *   Node 最新版
 *   Redis 最新版
 *   MySql 5.x
 
-NodeWk 1.0 特性：
+NodeWk 1.0.x 特性：
 *   集成Email服务(nodemailer)
 *   集成定时任务(node-schedule)
 *   集成验证码插件(captchapng)
@@ -42,6 +44,11 @@ NodeWk 1.0 特性：
 *   修改数据库连接及redis /config/custom/mysql.js /config/custom/redis.js
 *   npm i 安装(hiredis报错不影响运行)
 *   用户名：superadmin  密码：1
+
+
+其他说明：
+*   /api/policies/sessionAuth.js        后台权限验证
+*   /api/policies/oauthAuth.js      API TOKEN权限验证
 
 
 
