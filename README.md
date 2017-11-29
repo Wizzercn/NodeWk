@@ -52,5 +52,11 @@ NodeWk 1.0.x 特性：
 *   /api/policies/sessionAuth.js        后台权限验证
 *   /api/policies/oauthAuth.js      API TOKEN权限验证
 
+# 关于
+
+*   本项目完全开源，商用完全免费
+*   欢迎打赏，以资鼓励
+
+![打赏](pay.jpg)
 
 
