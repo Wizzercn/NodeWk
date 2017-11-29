@@ -39,11 +39,12 @@ NodeWk 1.0.x 特性：
 
 使用说明：
 *   搭建Node.js运行环境
-*   安装必备组件yum install ImageMagick-c++.x86_64
+*   安装必备组件yum install ImageMagick-c++.x86_64(验证码等图形处理)
 *   创建空的数据库,使用nodewk.sql还原数据库
-*   修改数据库连接及redis /config/custom/mysql.js /config/custom/redis.js
-*   npm i 安装(hiredis报错不影响运行)
-*   node app.js 或 npm start 运行
+*   修改数据库连接配置 /config/custom/mysql.js
+*   修改数Redis连接配置 /config/custom/redis.js
+*   npm i 安装(hiredis报错或报 Error: Can't find Python executable都不影响项目运行)
+*   node app.js 或 npm start 运行 (如果启动时项目根目录不能创建.tmp文件夹,请手动创建)
 *   http://127.0.0.1/sysadmin 访问后台
 *   用户名：superadmin  密码：1
 
