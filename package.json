@@ -9,7 +9,7 @@
     "captchapng": "0.0.1",
     "connect-redis": "^3.0.2",
     "crypto": "0.0.3",
-    "ejs": "2.3.4",
+    "ejs": "2.5.7",
     "emoji": "^0.3.2",
     "express": "^4.15.3",
     "gm": "^1.21.1",
