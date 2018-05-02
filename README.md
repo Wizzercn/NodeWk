@@ -1,4 +1,4 @@
-NodeWk 1.0.3
+NodeWk 1.0.4
 ======
 基于Sails.js MVC开发，实现常用的系统、微信、CMS等功能
 
