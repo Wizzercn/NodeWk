@@ -7,7 +7,7 @@ PS：如果对Java开发框架感兴趣，可以看这里：https://github.com/W
 在线演示地址
 ======
 
-https://www.nodeshop.cn/sysadmin        NodeWk 演示地址(node)
+https://www.nodeshop.cn        NodeWk 演示地址(node)
 
 https://nutzwk.wizzer.cn        NutzWk 演示地址(java)
 
