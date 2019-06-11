@@ -2,12 +2,14 @@ NodeWk 1.0.4
 ======
 基于Sails.js MVC开发，实现常用的系统、微信、CMS等功能
 
+有基于 NodeWk 开发的B2C商城系统 PC+WAP 需要的联系作者QQ: 11624317
+
 PS：如果对Java开发框架感兴趣，可以看这里：https://github.com/Wizzercn/NutzWk
 
 在线演示地址
 ======
 
-https://www.nodeshop.cn/sysadmin        NodeWk 演示地址(node)
+https://www.nodeshop.cn        NodeWk 演示地址(node)
 
 https://nutzwk.wizzer.cn        NutzWk 演示地址(java)
 
@@ -39,7 +41,6 @@ NodeWk 1.0.x 特性：
 
 使用说明：
 *   搭建Node.js运行环境
-*   安装必备组件yum install ImageMagick-c++.x86_64(验证码等图形处理)
 *   创建空的数据库,使用nodewk.sql还原数据库
 *   修改数据库连接配置 /config/custom/mysql.js
 *   修改数Redis连接配置 /config/custom/redis.js
@@ -52,7 +53,22 @@ NodeWk 1.0.x 特性：
 其他说明：
 *   /api/policies/sessionAuth.js        后台权限验证
 *   /api/policies/oauthAuth.js      API TOKEN权限验证
+*   解决gurnt占用CPU过高问题,可以将 Gruntfile.js 重命名,或根目录增加 .sailsrc 文件,文件设置内容:
 
+```
+{
+  "generators": {
+    "modules": {}
+  },
+  "hooks": {
+      "grunt": false
+  },
+  "paths": {
+      "public": "assets"
+  }
+}
+
+```
 # 关于
 
 *   本项目完全开源，商用完全免费
