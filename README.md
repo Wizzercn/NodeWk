@@ -53,7 +53,7 @@ NodeWk 1.0.x 特性：
 其他说明：
 *   /api/policies/sessionAuth.js        后台权限验证
 *   /api/policies/oauthAuth.js      API TOKEN权限验证
-*   解决gurnt占用CPU过高问题,可以将 Gruntfile.js 重命名,或根目录增加 .sailsrc 文件,文件设置内容:
+*   解决grunt占用CPU过高问题,可以将 Gruntfile.js 重命名,或根目录增加 .sailsrc 文件,文件设置内容:
 
 ```
 {
